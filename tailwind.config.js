@@ -69,6 +69,87 @@ module.exports = {
       padding: {
         'appbar-size': 'var(--appbar-height)',
         'appbar-size-lg': 'var(--appbar-height-lg)'
+      },
+      colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        surface: {
+          10: 'hsl(var(--surface-10))',
+          15: 'hsl(var(--surface-15))',
+          20: 'hsl(var(--surface-20))',
+          30: 'hsl(var(--surface-30))',
+          40: 'hsl(var(--surface-40))',
+          50: 'hsl(var(--surface-50))'
+        },
+        natural: {
+          10: 'hsl(var(--natural-10))',
+          20: 'hsl(var(--natural-20))',
+          30: 'hsl(var(--natural-30))',
+          40: 'hsl(var(--natural-40))',
+          50: 'hsl(var(--natural-50))'
+        },
+        primary: {
+          10: 'hsl(var(--primary-10))',
+          20: 'hsl(var(--primary-20))',
+          30: 'hsl(var(--primary-30))',
+          40: 'hsl(var(--primary-40))',
+          50: 'hsl(var(--primary-50))',
+          60: 'hsl(var(--primary-60))',
+          70: 'hsl(var(--primary-70))'
+        },
+        accent: {
+          10: 'hsl(var(--accent-10))',
+          20: 'hsl(var(--accent-20))',
+          30: 'hsl(var(--accent-30))',
+          40: 'hsl(var(--accent-40))',
+          50: 'hsl(var(--accent-50))',
+          60: 'hsl(var(--accent-60))'
+        },
+        danger: {
+          DEFAULT: 'hsl(var(--danger))'
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))'
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))'
+        },
+        info: 'hsl(var(--info))',
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))'
+        },
+        normal: {
+          DEFAULT: 'hsl(var(--primary-50))'
+        },
+        solver: {
+          DEFAULT: 'hsl(var(--accent-10))'
+        },
+        tool: {
+          DEFAULT: 'hsl(var(--info))'
+        }
+      },
+      backgroundImage: {
+        'custom-gradient':
+          'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFF 100%)',
+        'fade-to-black':
+          'linear-gradient(180deg, rgba(18, 18, 18, 0.00) 0%, #121212 100%)'
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)'
+      },
+      boxShadow: {
+        xs: '2px 2px 4px 0px rgba(193, 200, 213, 0.25)',
+        sm: '4px 4px 4px 0px rgba(193, 200, 213, 0.30)',
+        md: '8px 8px 10px 0px rgba(193, 200, 213, 0.40);'
       }
     },
     screens: {
@@ -100,5 +181,43 @@ module.exports = {
       'appbar-size-lg': 'var(--appbar-height-lg)'
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [require('tailwindcss-animate')],
+  layers: {
+    components: [
+      'container-default',
+      'fixed-center-layout',
+      'text-tm-bol',
+      'text-tm-md',
+      'text-tm-reg',
+      'text-ts-bol',
+      'text-ts-md',
+      'text-ts-reg',
+      'text-bl-bol',
+      'text-bl-md',
+      'text-bl-reg',
+      'text-bm-bol',
+      'text-bm-md',
+      'text-bm-reg',
+      'text-bs-bol',
+      'text-bs-md',
+      'text-bs-reg',
+      'text-btnL-bol',
+      'text-btnL-md',
+      'text-btnL-reg',
+      'text-btnM-bol',
+      'text-btnM-md',
+      'text-btnM-reg',
+      'text-cap-bol',
+      'text-cap-md',
+      'text-cap-reg'
+    ]
+  },
+  safelist: [
+    'bg-primary-30/10',
+    'border-info',
+    {
+      pattern:
+        /(bg|text|border)-(surface|natural|primary|accent|danger|warning|success|info)-(10|15|20|30|40|50|60|70)(\/[0-9]+)?/
+    }
+  ]
 };

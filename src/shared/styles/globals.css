@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* shadcn */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* custom */
+  /* --black-10: #ffffff;
+  --black-15: #4f4f4f;
+  --black-20: #dfe3e6;
+  --black-30: #cfd4da;
+  --black-40: #9d9e9f;
+  --black-50: #6c6e71;
+  --black-60: #46474a;
+  --black-70: #323234;
+  --black-80: #202021;
+  --natural-20: #f2f4f7;
+  --primary-40: #2bf096;
+  --primary-50: #24c37a; */
+
+  /* height */
+  --appbar-height: 42px;
+  --appbar-height-lg: 58px;
+}
+
+@theme inline {
+  /* shadcn */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* 사파리에서 scrollbar-color가 적용되지 않아 스크롤을 안보이도록 처리 */
+    scrollbar-width: none;
+    scrollbar-color: #292929 transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+body {
+  background: var(--black-80);
+  /* color: #ffffff; */
+}
+
+button {
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+}
+
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#contentCarousel .swiper,
+#drawerCarousel .swiper {
+  padding-left: calc(var(--spacing) * 8);
+  padding-right: calc(var(--spacing) * 8);
+  overflow: visible;
+}
+
+#contentCarousel .swiper {
+  max-height: 275px;
+}
+
+@media (width >= 680px) {
+  #contentCarousel .swiper {
+    max-height: 396px;
+    margin-top: 16px;
+  }
+}
+
+@media (width >= 1024px) {
+  #contentCarousel .swiper {
+    max-height: 582px;
+  }
+}
+
+@media (width >= 1280px) {
+  #contentCarousel .swiper {
+    max-height: 582px;
+  }
+}
+
+#drawerCarousel .swiper {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+}
+
+#contentCarousel .swiper-pagination,
+#drawerCarousel .swiper-pagination {
+  bottom: unset;
+  top: calc(100% + 0.5rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 8px;
+}
+
+#contentCarousel .swiper-pagination-bullet,
+#drawerCarousel .swiper-pagination-bullet {
+  margin: 0;
+  padding: 0;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 0.25rem;
+  opacity: 1;
+  background: var(--black-40);
+}
+
+#contentCarousel .swiper-pagination-bullet-active {
+  background: #ffffff;
+}
+
+#drawerCarousel .swiper-pagination-bullet-active {
+  background: var(--primary-40);
+}
+
+#contentCarousel .swiper-pagination-bullet-active,
+#drawerCarousel .swiper-pagination-bullet-active {
+  width: 1rem;
+}
+
+@media (width >= 64rem) {
+  #contentCarousel .swiper {
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  #contentCarousel .swiper-pagination {
+    display: none;
+  }
+
+  #drawerCarousel .swiper {
+    padding: 0;
+  }
+
+  #drawerCarousel .swiper-pagination {
+    top: calc(100% + calc(var(--spacing) * 4));
+  }
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .sub-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .sub-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sub-scrollbar::-webkit-scrollbar-thumb {
+    -webkit-appearance: none;
+    background: var(--black-15, #4f4f4f);
+    border-radius: 99px;
+  }
+
+  .sub-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--black-15, #4f4f4f) transparent;
+  }
+
+  .header-height-margin {
+    margin-top: var(--appbar-height-lg);
+  }
+  .bottom-height-margin {
+    margin-bottom: var(--appbar-height-lg);
+  }
+}

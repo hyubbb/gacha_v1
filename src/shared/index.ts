@@ -1,3 +1,3 @@
-export * from './ui'
-export * from './lib'
-export * from './hooks'
+export * from './ui/shadcn';
+export * from './lib';
+export * from './hooks';

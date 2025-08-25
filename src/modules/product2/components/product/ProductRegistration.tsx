@@ -33,7 +33,7 @@ import type { SuggestedLocation } from '@/modules/slot/lib/types';
 import {
   addMockProduct,
   getMockProducts
-} from '@/modules/product/api/mock-data';
+} from '@/modules/product2/api/mock-data';
 import { CATEGORIES } from '../../lib';
 
 export function ProductRegistration({

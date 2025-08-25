@@ -1,6 +1,9 @@
-import { ParentLocation, Slot } from "../lib/types";
+import { ParentLocation, Slot } from '../lib/types';
 
 export const initialMockParentLocations: ParentLocation[] = [
+  { id: '1-1', row: 1, col: 1, name: '메인 음료 구역' },
+  { id: '1-2', row: 1, col: 2, name: '메인 음료 구역' },
+  { id: '1-3', row: 1, col: 3, name: '메인 음료 구역' },
   { id: '2-3', row: 2, col: 3, name: '메인 음료 구역' },
   { id: '2-4', row: 2, col: 4, name: '프리미엄 음료' },
   { id: '3-5', row: 3, col: 5, name: '스낵 구역' },
@@ -8,6 +11,44 @@ export const initialMockParentLocations: ParentLocation[] = [
 ];
 
 export const initialMockLocations: Slot[] = [
+  {
+    id: '1-1-1',
+    parentId: '1-1',
+    row: 1,
+    col: 1,
+    layer: 'top',
+    price: 3,
+    maxQuantity: 20,
+    currentQuantity: 10,
+    status: 'active',
+    product: {
+      id: '1',
+      name: 'lovot 가챠',
+      image: '/lovot.jpg',
+      price: 1,
+      quantity: 11,
+      inStockDate: new Date()
+    }
+  },
+  {
+    id: '1-1-2',
+    parentId: '1-1',
+    row: 1,
+    col: 1,
+    layer: 'middle',
+    price: 3,
+    maxQuantity: 20,
+    currentQuantity: 10,
+    status: 'active',
+    product: {
+      id: '1',
+      name: 'lovot 가챠',
+      image: '/lovot.jpg',
+      price: 1,
+      quantity: 11,
+      inStockDate: new Date()
+    }
+  },
   {
     id: '2-3-2', // parentId-layerNumber
     parentId: '2-3',
@@ -19,10 +60,11 @@ export const initialMockLocations: Slot[] = [
     currentQuantity: 7,
     status: 'active',
     product: {
-      id: 'prod-1',
-      name: '코카콜라 500ml',
-      image: '/placeholder.svg?height=50&width=50&text=CocaCola',
-      price: 200,
+      id: '2',
+      name: 'mofusand',
+      image: '/gacha1.jpg',
+      price: 2,
+      quantity: 12,
       inStockDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000) // 8일 전 (노란색 표시 대상)
     }
   },
@@ -37,10 +79,11 @@ export const initialMockLocations: Slot[] = [
     currentQuantity: 2,
     status: 'active',
     product: {
-      id: 'prod-4',
-      name: '새로운 음료',
-      image: '/placeholder.svg?height=50&width=50&text=NewDrink',
-      price: 250,
+      id: '3',
+      name: 'lovot2',
+      image: '/gacha2.jpg',
+      price: 3,
+      quantity: 13,
       inStockDate: new Date() // 오늘 입고 (초록색)
     }
   },
@@ -55,10 +98,11 @@ export const initialMockLocations: Slot[] = [
     currentQuantity: 3,
     status: 'active',
     product: {
-      id: 'prod-2',
-      name: '펩시콜라 500ml',
-      image: '/placeholder.svg?height=50&width=50&text=Pepsi',
-      price: 200,
+      id: '4',
+      name: '이누야샤',
+      image: '/gacha3.jpg',
+      price: 4,
+      quantity: 14,
       inStockDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2일 전 (초록색)
     }
   },
@@ -84,27 +128,36 @@ export const initialMockLocations: Slot[] = [
     currentQuantity: 5,
     status: 'inactive', // 비활성 위치
     product: {
-      id: 'prod-5',
-      name: '오래된 과자',
-      image: '/placeholder.svg?height=50&width=50&text=OldSnack',
-      price: 100,
+      id: '5',
+      name: 'lovot3',
+      image: '/gacha4.jpg',
+      price: 5,
+      quantity: 15,
       inStockDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) // 10일 전
     }
   }
 ];
 
 let currentMockLocations: Slot[] = [...initialMockLocations];
-let currentMockParentLocations: ParentLocation[] = [...initialMockParentLocations];
+let currentMockParentLocations: ParentLocation[] = [
+  ...initialMockParentLocations
+];
 
 export const getMockLocations = () => [...currentMockLocations];
 export const getMockParentLocations = () => [...currentMockParentLocations];
 
 export const updateMockLocation = (updatedLocation: Slot) => {
-  currentMockLocations = currentMockLocations.map(s => s.id === updatedLocation.id ? updatedLocation : s);
+  currentMockLocations = currentMockLocations.map((s) =>
+    s.id === updatedLocation.id ? updatedLocation : s
+  );
 };
 
-export const updateMockParentLocation = (updatedParentLocation: ParentLocation) => {
-  currentMockParentLocations = currentMockParentLocations.map(ps => ps.id === updatedParentLocation.id ? updatedParentLocation : ps);
+export const updateMockParentLocation = (
+  updatedParentLocation: ParentLocation
+) => {
+  currentMockParentLocations = currentMockParentLocations.map((ps) =>
+    ps.id === updatedParentLocation.id ? updatedParentLocation : ps
+  );
 };
 
 export const addMockParentLocation = (newParentLocation: ParentLocation) => {
@@ -112,8 +165,12 @@ export const addMockParentLocation = (newParentLocation: ParentLocation) => {
 };
 
 export const deleteMockParentLocation = (parentLocationId: string) => {
-  currentMockParentLocations = currentMockParentLocations.filter(ps => ps.id !== parentLocationId);
-  currentMockLocations = currentMockLocations.filter(s => s.parentId !== parentLocationId); // 자식 위치도 함께 삭제
+  currentMockParentLocations = currentMockParentLocations.filter(
+    (ps) => ps.id !== parentLocationId
+  );
+  currentMockLocations = currentMockLocations.filter(
+    (s) => s.parentId !== parentLocationId
+  ); // 자식 위치도 함께 삭제
 };
 
 export const addMockLocation = (newLocation: Slot) => {
@@ -121,5 +178,7 @@ export const addMockLocation = (newLocation: Slot) => {
 };
 
 export const deleteMockLocation = (locationId: string) => {
-  currentMockLocations = currentMockLocations.filter(s => s.id !== locationId);
+  currentMockLocations = currentMockLocations.filter(
+    (s) => s.id !== locationId
+  );
 };

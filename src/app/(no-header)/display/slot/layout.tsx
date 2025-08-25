@@ -10,7 +10,6 @@ export default function DisplayListLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  console.log(pathname);
 
   // /detail 이하에서는 layout 미적용
   if (pathname.endsWith('/change') || pathname.endsWith('/add')) {

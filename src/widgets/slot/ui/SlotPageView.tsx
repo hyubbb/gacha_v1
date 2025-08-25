@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { dummyData } from '../model/dummyData';
 import { useRouter } from 'next/navigation';
 import { selectedSlotAtom } from '@/modules/slot/jotai/atom';
 import { useSetAtom } from 'jotai';
+import { dummyGacha } from '@/shared/hooks/dummyData';
 
 const SlotSingle = ({ row, col }: { row: number; col: number }) => {
   const router = useRouter();
@@ -17,13 +17,21 @@ const SlotSingle = ({ row, col }: { row: number; col: number }) => {
       id: `${row}-${col}`,
       parentId: row + '',
       layer: col === 1 ? 'top' : col === 2 ? 'middle' : 'bottom',
-      price: 0,
-      maxQuantity: 0,
-      currentQuantity: 0,
-      status: 'active'
+      price: 3,
+      maxQuantity: 20,
+      currentQuantity: 10,
+      status: 'active',
+      product: {
+        id: '1',
+        name: '로보트 가챠',
+        image: '/lovot.jpg',
+        price: 4,
+        quantity: 10,
+        inStockDate: new Date()
+      }
     });
     const id = `${row}-${col}`;
-    router.push(`/display/list/${id}`);
+    router.push(`/display/slot/${id}`);
   };
 
   return (
@@ -98,15 +106,15 @@ const SlotPageView = () => {
         className="min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden pb-2"
       >
         <div className="flex h-full gap-8">
-          {dummyData.map((item, index) => (
+          {dummyGacha.map((item, index) => (
             <div
               key={index}
               ref={setColRef}
               className="grid h-full shrink-0 snap-center grid-rows-3 gap-4"
             >
-              <SlotSingle row={item.id} col={3} />
-              <SlotSingle row={item.id} col={2} />
-              <SlotSingle row={item.id} col={1} />
+              <SlotSingle row={+item.id} col={3} />
+              <SlotSingle row={+item.id} col={2} />
+              <SlotSingle row={+item.id} col={1} />
             </div>
           ))}
         </div>

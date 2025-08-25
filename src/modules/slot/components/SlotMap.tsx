@@ -10,7 +10,8 @@ import {
   LAYER_NUMBERS,
   MAX_QUANTITY
 } from '../lib/constants';
-import { getLayerColor, hasPriceMismatch } from '../lib/utils';
+import { getLayerColor, hasPriceMismatch } from '../lib/utils/utils';
+import { cn } from '@/shared/lib/utils';
 
 // Legend component
 export const MapLegend = () => (
@@ -97,7 +98,8 @@ export const MapCell = ({
   cellLocations,
   parentLocation,
   isSelected,
-  onClick
+  onClick,
+  className
 }: {
   row: number;
   col: number;
@@ -105,9 +107,13 @@ export const MapCell = ({
   parentLocation: ParentLocation | undefined;
   isSelected: boolean;
   onClick: () => void;
+  className?: string;
 }) => (
   <div
-    className={`h-16 w-16 cursor-pointer rounded border-2 transition-all hover:scale-105 ${isSelected ? 'ring-2 ring-blue-500' : ''} relative flex flex-col items-center justify-around p-1`}
+    className={cn(
+      `h-16 w-16 cursor-pointer rounded-md border-1 shadow-sm transition-all hover:scale-105 ${isSelected ? 'ring-2 ring-blue-500' : ''} relative flex flex-col items-center justify-around p-1`,
+      className
+    )}
     onClick={onClick}
     title={
       parentLocation
@@ -115,11 +121,13 @@ export const MapCell = ({
         : `위치: (${row}, ${col})`
     }
   >
+    {/* 부모 위치 표시 뱃지 */}
     {parentLocation && (
       <div className="absolute top-0 -left-1 rounded bg-blue-600 px-1 text-xs text-[10px] text-white">
         {row},{col}
       </div>
     )}
+
     {LAYER_NAMES.map((layerName) => {
       const location = cellLocations.find((s) => s.layer === layerName);
       return (

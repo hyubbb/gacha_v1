@@ -36,7 +36,7 @@ export const CoinModifyModal = () => {
       ...miniToast,
       open: true,
       message: '슬롯의 코인이 변경되었습니다.',
-      position: 'top'
+      position: 'bottom'
     });
   };
 

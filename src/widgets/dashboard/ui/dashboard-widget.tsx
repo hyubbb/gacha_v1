@@ -20,7 +20,7 @@ import { SlotMapView } from '@/widgets/slot';
 import {
   ProductRegistration,
   ProductSearch
-} from '@/modules/product/components';
+} from '@/modules/product2/components';
 import { DisplayRegistration } from '@/modules/dashboard/components';
 import { UserManagement } from '@/modules/user/components';
 

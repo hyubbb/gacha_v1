@@ -11,13 +11,7 @@ import {
 import { Button } from '@/shared/ui/shadcn/button';
 import { Input } from '@/shared/ui/shadcn/input';
 import { Label } from '@/shared/ui/shadcn/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/shared/ui/shadcn/select';
+
 import {
   Dialog,
   DialogContent,
@@ -38,7 +32,7 @@ import {
   addMockLocation,
   deleteMockLocation
 } from '@/modules/slot/api/mock-data';
-import { getMockProducts } from '@/modules/product/api/mock-data';
+import { getMockProducts } from '@/modules/product2/api/mock-data';
 import { Product, ParentLocation, Slot } from '@/shared/lib';
 import { ProductRegisterAssignForm } from '@/modules/slot/components/form/ProductRegisterAssignForm';
 import { ProductModifyForm } from '@/modules/slot/components/form/ProductModifyForm';
@@ -60,7 +54,7 @@ import {
   LocationInfo,
   EditLocationForm
 } from '@/modules/slot/components';
-import { clampInt, getStoreDisplayName } from '@/modules/slot/lib/utils';
+import { clampInt, getStoreDisplayName } from '@/modules/slot/lib/utils/utils';
 import type { Layer, SelectedCell } from '@/modules/slot/lib';
 import { useRouter } from 'next/navigation';
 
@@ -303,8 +297,8 @@ export function SlotMapView({ userRole, currentStore }: SlotMapViewProps) {
         <Button variant="outline" onClick={() => router.push('/display')}>
           display
         </Button>
-        <Button variant="outline" onClick={() => router.push('/display/list')}>
-          display/list
+        <Button variant="outline" onClick={() => router.push('/display/slot')}>
+          display/slot
         </Button>
       </section>
 

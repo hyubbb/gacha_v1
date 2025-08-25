@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useToast } from '@/shared/hooks/use-toast';
-import { getMockProducts } from '@/modules/product/api/mock-data';
+import { getMockProducts } from '@/modules/product2/api/mock-data';
 import { getMockLocations } from '@/modules/slot/api/mock-data';
-import { Product } from '@/modules/product/lib/types';
+import { Product } from '@/modules/product2/lib/types';
 import { Slot } from '@/modules/slot/lib/types';
 import { ProductSearchProps } from '../../lib/types';
 import { List, Filter, Total } from '..';

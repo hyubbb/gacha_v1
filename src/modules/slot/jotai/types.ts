@@ -1,9 +1,15 @@
+import { SlotProduct } from '../lib';
+
+type Action = 'random' | 'stock' | 'delete';
+
 export type ReplaceModalProps = {
   open: boolean;
-  onClick: (type: 'random' | 'stock' | 'delete') => void;
+  onClick: (type: Action) => void;
+  product: SlotProduct | undefined;
 };
 
 export type RemainModalProps = {
   open: boolean;
-  onClick: (type: 'random' | 'stock') => void;
+  onClick: (type: Action) => void;
+  product: SlotProduct | undefined;
 };

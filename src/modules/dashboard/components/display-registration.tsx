@@ -47,7 +47,7 @@ import {
   X
 } from 'lucide-react';
 import { useToast } from '@/shared/hooks/use-toast';
-import { getMockProducts } from '@/modules/product/api/mock-data';
+import { getMockProducts } from '@/modules/product2/api/mock-data';
 import {
   getMockLocations,
   getMockParentLocations,

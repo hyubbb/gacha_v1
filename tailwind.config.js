@@ -105,6 +105,12 @@ module.exports = {
           50: 'hsl(var(--accent-50))',
           60: 'hsl(var(--accent-60))'
         },
+        dark: {
+          100: '(var(--dark-100))',
+          60: '(var(--dark-60))',
+          40: '(var(--dark-40))',
+          20: '(var(--dark-20))'
+        },
         danger: {
           DEFAULT: 'hsl(var(--danger))'
         },

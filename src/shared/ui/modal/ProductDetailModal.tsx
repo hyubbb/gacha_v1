@@ -8,7 +8,7 @@ import {
 } from '../shadcn/dialog';
 import { productDetailModalAtom } from '@/shared/jotai/atom';
 import { useAtom } from 'jotai';
-import { ProductDetail } from '@/modules/product/components/product/ProductDetail';
+import { ProductDetail } from '@/modules/slot/components/product/ProductDetail';
 
 export const ProductDetailModal = () => {
   const [productDetailModal, setProductDetailModal] = useAtom(

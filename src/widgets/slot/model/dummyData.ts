@@ -1,62 +1,58 @@
 export const dummyData = [
   {
-    id: 1,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/lovot.jpg',
+    price: 1,
+    quantity: 11,
+    inStockDate: new Date()
   },
   {
-    id: 2,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha1.jpg',
+    price: 2,
+    quantity: 12,
+    inStockDate: new Date()
   },
   {
-    id: 3,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha2.jpg',
+    price: 3,
+    quantity: 13,
+    inStockDate: new Date()
   },
   {
-    id: 4,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha3.jpg',
+    price: 4,
+    quantity: 14,
+    inStockDate: new Date()
   },
   {
-    id: 5,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha4.jpg',
+    price: 5,
+    quantity: 15,
+    inStockDate: new Date()
   },
   {
-    id: 6,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha5.jpg',
+    price: 6,
+    quantity: 16,
+    inStockDate: new Date()
   },
   {
-    id: 7,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 8,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 9,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 10,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 11,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 12,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 13,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 14,
-    image: 'https://picsum.photos/200/300'
-  },
-  {
-    id: 15,
-    image: 'https://picsum.photos/200/300'
+    id: 'lovot 가챠',
+    name: '로보트 가챠',
+    image: '/gacha6.jpg',
+    price: 7,
+    quantity: 17,
+    inStockDate: new Date()
   }
 ];

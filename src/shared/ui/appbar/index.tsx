@@ -20,7 +20,7 @@ export function Appbar({
   return (
     <header
       className={cn(
-        'lg:h-appbar-size-lg z-40 mt-2 flex h-[48px] w-full items-center justify-between px-[18px] py-[8px]',
+        'lg:h-appbar-size-lg z-40 my-2 mb-4 flex h-[48px] w-full items-center justify-between px-[18px] shadow-[0_2px_8px_0_rgba(0,0,0,0.1)]',
         className
       )}
     >

@@ -1,58 +1,87 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { ProductCoinStockHistory } from '@/shared/ui/components/products/ProductCoinStockHistory';
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
 import { Button } from '@/shared';
 import { Camera, Package2, SearchIcon } from 'lucide-react';
-
-const product = {
-  image: 'https://via.placeholder.com/150',
-  name: 'Product 1',
-  stock: 10,
-  lastModified: '2021-01-01',
-  coin: 100
-};
+import { miniToastAtom } from '@/shared/jotai/atom';
+import { useAtom } from 'jotai';
+import { selectedSlotAtom } from '@/modules/slot/jotai/atom';
+import { useRouter } from 'next/navigation';
+import { dummyGacha } from '@/shared/hooks/dummyData';
+import { SlotProduct } from '@/modules/slot/lib';
+import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
 
 // 동일한 코인만 보여줘야됨.
 
 export const SlotAddProduct = () => {
-  const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
-  const handleSelect = useCallback((index: number) => {
-    setSelectedProduct((prev: number | null) =>
-      prev === index ? null : index
+  const router = useRouter();
+  const [selectedProduct, setSelectedProduct] = useState<SlotProduct | null>(
+    null
+  );
+  const [selectedSlot, setSelectedSlot] = useAtom(selectedSlotAtom);
+  const [miniToast, setMiniToast] = useAtom(miniToastAtom);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const stockProducts = useMemo(() => {
+    return dummyGacha;
+  }, []);
+
+  const handleSelect = useCallback((product: SlotProduct) => {
+    setSelectedProduct((prev: SlotProduct | null) =>
+      prev?.id === product.id ? null : product
     );
   }, []);
 
   const handleAddProduct = useCallback(() => {
-    console.log('add product');
-  }, []);
+    console.log(selectedSlot, selectedProduct);
+
+    if (!selectedSlot || !selectedProduct) return;
+
+    setSelectedSlot({
+      ...selectedSlot,
+      inStockDate: new Date(),
+      product: selectedProduct
+    });
+
+    setMiniToast({
+      open: true,
+      message: '상품 등록이 완료되었습니다.',
+      time: 3000,
+      onClose: () => {
+        router.push(`/display/slot/${selectedSlot?.id}`);
+      }
+    });
+  }, [selectedSlot, selectedProduct]);
+
+  const filteredProducts = useMemo(() => {
+    return stockProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [stockProducts, searchTerm]);
 
   return (
-    <section className="container flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-1 items-center gap-3 rounded-md bg-gray-200 p-3 pl-4">
-          <SearchIcon size={18} />
-          <input
-            placeholder="검색어를 입력하세요."
-            className="placeholder:text-ts-sm w-full border-transparent bg-transparent text-sm shadow-none ring-0 outline-none active:ring-0"
-          />
-        </div>
-        <div className="flex h-full cursor-pointer items-center justify-center rounded-md p-2 hover:bg-gray-200">
-          <Camera size={20} />
-        </div>
-      </div>
+    <section className="container flex flex-col gap-6">
+      {/* 검색영역 */}
+      <ProductSearch
+        products={stockProducts}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
+
+      {/* 재고 상품 목록 */}
       <div className="flex flex-col gap-2">
         <Subtitle>
           <Package2 size={18} /> 재고 상품 목록
         </Subtitle>
         <ul className="mb-4 flex flex-col gap-2 overflow-y-auto">
-          {Array.from({ length: 5 }).map((_, index) => (
+          {filteredProducts.map((item, index) => (
             <ProductCoinStockHistory
               key={index}
               index={index}
-              product={product}
-              isSelected={selectedProduct === index}
+              product={item}
+              isSelected={selectedProduct?.id === item.id}
               onSelect={handleSelect}
             />
           ))}

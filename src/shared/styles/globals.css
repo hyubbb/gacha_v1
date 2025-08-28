@@ -19,7 +19,8 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* --destructive: oklch(0.577 0.245 27.325); */
+  --destructive: oklch(0.97 0 0);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -38,8 +39,6 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-
-  /* custom */
 
   /* custom */
   --black-10: #ffffff;
@@ -69,13 +68,26 @@
   --natural-20: #f2f4f7;
   --natural-10: #ffffff;
 
-  --primary-70: #032415;
+  /* --primary-70: #032415;
   --primary-60: #178d57;
   --primary-50: #24c37a;
   --primary-40: #2bf096;
   --primary-30: #72f5b9;
   --primary-20: #b4f9da;
-  --primary-10: #f7fefb;
+  --primary-10: #f7fefb; */
+
+  --primary-100: #17171b;
+  --primary-90: #303234;
+  --primary-80: #4b4d4f;
+  --primary-70: #626466;
+  --primary-60: #76787a;
+  --primary-50: #9ea0a2;
+  --primary-40: #c6c8ca;
+  --primary-30: #dbdddf;
+  --primary-20: #e4e6e8;
+  --primary-10: #eef0f2;
+  --primary-5: #f5f5f5;
+  --primary-0: #ffffff;
 
   --accent-60: #1d2433;
   --accent-50: #ffffff;
@@ -92,6 +104,13 @@
   --normal: #ff9900;
   --solver: #993399;
   --tool: #63aec9;
+
+  /* gacha custom */
+
+  --dark-100: 17171B;
+  --dark-60: rgba(23, 23, 27, 0.6);
+  --dark-40: rgba(23, 23, 27, 0.4);
+  --dark-20: rgba(23, 23, 27, 0.2);
 
   /* height */
   --appbar-height: 42px;
@@ -127,12 +146,21 @@
   --color-primary-50: var(--primary-50);
   --color-primary-60: var(--primary-60);
   --color-primary-70: var(--primary-70);
+  --color-natural-50: var(--natural-50);
+  --color-natural-40: var(--natural-40);
+  --color-natural-30: var(--natural-30);
+  --color-natural-20: var(--natural-20);
+  --color-natural-10: var(--natural-10);
   --color-accent-10: var(--accent-10);
   --color-accent-20: var(--accent-20);
   --color-accent-30: var(--accent-30);
   --color-accent-40: var(--accent-40);
   --color-accent-50: var(--accent-50);
   --color-accent-60: var(--accent-60);
+  --color-dark-100: var(--dark-100);
+  --color-dark-60: var(--dark-60);
+  --color-dark-40: var(--dark-40);
+  --color-dark-20: var(--dark-20);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-success: var(--success);
@@ -194,9 +222,14 @@
   }
 }
 
+html,
 body {
-  background: var(--black-80);
-  /* color: #ffffff; */
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--secondary);
+  color: var(--foreground);
 }
 
 button {
@@ -208,8 +241,11 @@ input {
 }
 
 .container {
-  width: 90%;
+  padding: 0 16px;
   margin: 0 auto;
+  margin-top: 60px;
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
 }
 
 #contentCarousel .swiper,

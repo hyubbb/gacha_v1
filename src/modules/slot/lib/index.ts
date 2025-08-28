@@ -5,4 +5,4 @@ export type * from './types';
 export { MAX_QUANTITY, MIN_QUANTITY, DEFAULT_MAX_QUANTITY } from './constants';
 
 // 유틸리티 함수
-export { clampInt , getStoreDisplayName} from './utils';
+export { clampInt, getStoreDisplayName } from './utils/utils';

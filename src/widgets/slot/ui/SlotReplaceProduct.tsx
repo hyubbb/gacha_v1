@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { replaceModalAtom, selectedSlotAtom } from '@/modules/slot/jotai/atom';
 import { Button } from '@/shared/ui/shadcn/button';
 import { useAtom } from 'jotai';
@@ -7,34 +7,23 @@ import { miniToastAtom } from '@/shared/jotai/atom';
 import { useRouter } from 'next/navigation';
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
 import { ProductCoinStockHistory } from '@/shared/ui/components/products/ProductCoinStockHistory';
+import { dummyGacha } from '@/shared/hooks/dummyData';
+import { SlotProduct } from '@/modules/slot/lib';
 
-export type Product = {
-  image: string;
-  name: string;
-  stock: number;
-  lastModified: string;
-  coin: number;
-};
-
-const product: Product = {
-  image: '/images/product/product-1.png',
-  name: '체인소맨-캡슐 피규어 컬렉션',
-  stock: 3,
-  lastModified: '2025-08-16 10:00:00',
-  coin: 4
-};
 export const SlotReplaceProduct = () => {
-  const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<SlotProduct | null>(
+    null
+  );
   const [replaceModal, setReplaceModal] = useAtom(replaceModalAtom);
   const [miniToast, setMiniToast] = useAtom(miniToastAtom);
   const [selectedSlot] = useAtom(selectedSlotAtom);
   const router = useRouter();
-  const handleSelect = useCallback(
-    (index: number) => {
-      console.log(index);
 
-      setSelectedProduct((prev: number | null) =>
-        prev === index ? null : index
+  const handleSelect = useCallback(
+    (product: SlotProduct) => {
+      setSelectedProduct((prev: SlotProduct | null) =>
+        prev?.id === product.id ? null : product
       );
     },
     [setSelectedProduct]
@@ -54,22 +43,31 @@ export const SlotReplaceProduct = () => {
                 : '상품 삭제',
           time: 2000
         });
-        router.push(`/display/list/${selectedSlot?.id}`);
-      }
+        router.push(`/display/slot/${selectedSlot?.id}`);
+      },
+      product: selectedProduct || undefined
     });
-  }, [setReplaceModal, setMiniToast]);
+  }, [setReplaceModal, setMiniToast, selectedProduct]);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="container">
       <Subtitle>재고 상품 목록</Subtitle>
 
       <ul className="mb-4 flex flex-col gap-2 overflow-y-auto">
-        {Array.from({ length: 10 }).map((_, index) => (
+        {dummyGacha.map((item, index) => (
           <ProductCoinStockHistory
             key={index}
             index={index}
-            product={product}
-            isSelected={selectedProduct === index}
+            product={item}
+            isSelected={selectedProduct?.id === item.id}
             onSelect={handleSelect}
           />
         ))}

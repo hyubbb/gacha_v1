@@ -2,8 +2,8 @@ export type CoinModifyModalProps = {
   title: string;
   description?: string;
   open: boolean;
-  coin: number;
-  onSubmit: (draftCoin: number) => void;
+  coin?: number;
+  onSubmit?: (draftCoin: number) => void;
 };
 export type ProductDetailModalProps = {
   open: boolean;

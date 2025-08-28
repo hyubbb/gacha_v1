@@ -9,34 +9,28 @@ import {
 } from '@/shared/ui/shadcn/dialog';
 import { Button } from '@/shared/ui/shadcn/button';
 import { DialogHeader } from '@/shared/ui/shadcn/dialog';
-import { useAtom } from 'jotai';
-import { replaceModalAtom } from '@/modules/slot/jotai/atom';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { replaceModalAtom, selectedSlotAtom } from '@/modules/slot/jotai/atom';
+import { useSlotProductActions } from '@/modules/slot/hooks';
 
 export const ReplaceModal = () => {
   const [replaceModal, setReplaceModal] = useAtom(replaceModalAtom);
-  const { open, onClick } = replaceModal;
+  const { open, onClick, product } = replaceModal;
 
-  const handleOpenChange = (open: boolean) => {
-    setReplaceModal({ ...replaceModal, open });
-  };
-
-  const handleRandomMove = () => {
-    onClick('random');
-    handleOpenChange(false);
-  };
-
-  const handleStockMove = () => {
-    onClick('stock');
-    handleOpenChange(false);
-  };
-
-  const handleDeleteProduct = () => {
-    onClick('delete');
-    handleOpenChange(false);
-  };
+  const { moveProductToRandomSlot, moveProductToStock, removeProductFromSlot } =
+    useSlotProductActions({
+      onClick,
+      handleOpenChange: (open) => {
+        setReplaceModal({ ...replaceModal, open });
+      },
+      selectedProduct: product || undefined
+    });
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => setReplaceModal({ ...replaceModal, open })}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>기존 상품을 어떻게 할까요?</DialogTitle>
@@ -47,17 +41,25 @@ export const ReplaceModal = () => {
         {/* 이전과 동일한 암호일때 오류 발생 */}
         <DialogFooter>
           <div className="flex flex-col space-y-3 p-2">
-            <Button variant="default" size="lg" onClick={handleRandomMove}>
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => moveProductToRandomSlot('random')}
+            >
               랜덤 슬롯으로 이동
             </Button>
-            <Button variant="outline" size="lg" onClick={handleStockMove}>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => moveProductToStock('stock')}
+            >
               재고로 이동
             </Button>
             <Button
               variant="ghost"
               size="lg"
               className="hover:text-destructive"
-              onClick={handleDeleteProduct}
+              onClick={() => removeProductFromSlot('delete')}
             >
               기존 상품 폐기
             </Button>

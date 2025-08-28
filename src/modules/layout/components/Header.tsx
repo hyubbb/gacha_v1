@@ -10,7 +10,7 @@ import {
 } from '@/shared/ui/shadcn/dialog';
 import { Input } from '@/shared/ui/shadcn/input';
 import { LogOut, Search, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import ChangePasswordModal from './modal/ChangePasswordModal';
 import MypageModal from './modal/MypageModal';
@@ -21,6 +21,9 @@ export const Header = ({ className }: { className?: string }) => {
   const router = useRouter();
   const [userRole, setUserRole] = useState<'admin' | 'branch'>('admin');
   const [currentStore, setCurrentStore] = useState('store-001');
+  const [currentPage, setCurrentPage] = useState<'display' | 'stock'>(
+    'display'
+  );
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenChangePasswordModal, setIsOpenChangePasswordModal] =
@@ -52,6 +55,11 @@ export const Header = ({ className }: { className?: string }) => {
     setIsOpenLogoutConfirmModal(false);
   };
 
+  const handlePageChange = (page: 'display' | 'stock') => {
+    setCurrentPage(page);
+    router.push(`/${page}`);
+  };
+
   return (
     <header className={cn('border-b border-gray-200 bg-white', className)}>
       <div className="container mx-auto px-4">
@@ -59,10 +67,22 @@ export const Header = ({ className }: { className?: string }) => {
           {/* 네비게이션 탭 */}
           <div className="flex items-center space-x-8">
             <div className="flex rounded-lg bg-gray-100 p-1">
-              <button className="w-28 rounded-md bg-white px-2 py-1 text-sm font-medium text-gray-900 shadow-sm">
+              <button
+                onClick={() => handlePageChange('display')}
+                className={cn(
+                  'w-28 rounded-md px-2 py-1 text-sm font-medium text-gray-900',
+                  currentPage === 'display' && 'bg-white shadow-sm'
+                )}
+              >
                 판매
               </button>
-              <button className="w-28 px-2 py-1 text-sm font-medium text-gray-600 hover:text-gray-900">
+              <button
+                onClick={() => handlePageChange('stock')}
+                className={cn(
+                  'w-28 rounded-md px-2 py-1 text-sm font-medium text-gray-900',
+                  currentPage === 'stock' && 'bg-white shadow-sm'
+                )}
+              >
                 재고
               </button>
             </div>

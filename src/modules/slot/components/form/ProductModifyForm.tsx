@@ -162,6 +162,7 @@ export const ProductModifyForm = ({
           name: productToReplace.name,
           image: productToReplace.image,
           price: productToReplace.price,
+          quantity: productToReplace.quantity,
           inStockDate: new Date() // New product, new in-stock date
         }
       };

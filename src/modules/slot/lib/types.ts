@@ -1,37 +1,48 @@
-import { Product } from "@/shared/lib/types"
-import { LAYER_NAMES } from "./constants";
+import { Product } from '@/shared/lib/types';
+import { LAYER_NAMES } from './constants';
 
+export type Layer = (typeof LAYER_NAMES)[number];
+export type MapSize = { rows: number; cols: number };
+export type SelectedCell = { row: number; col: number } | null;
 
-export type Layer = typeof LAYER_NAMES[number]
-export type MapSize = { rows: number; cols: number }
-export type SelectedCell = { row: number; col: number } | null
-
-
-export interface Slot { 
-    id: string // 위치 고유 ID (부모ID-1, 부모ID-2, 부모ID-3) -> (예: 2-3-1, 2-3-2)
-    parentId: string // 부모 위치 ID
-    row: number
-    col: number
-    layer: 'top' | 'middle' | 'bottom'
-    price: number // 위치 가격
-    maxQuantity: number
-    currentQuantity: number
-    status: 'active' | 'inactive' | 'maintenance'
-    product?: {
-      id: string
-      name: string
-      image: string
-      price: number // 할당된 상품의 가격
-      inStockDate?: Date // 상품이 이 위치에 입고된 날짜
-    }
-  }
-
- 
 export interface ParentLocation {
-  id: string // 부모 위치 ID (예: 2-3)
-  row: number
-  col: number
-  name?: string // 위치 이름 (선택사항)
+  id: string; // 부모 위치 ID (예: 2-3)
+  row: number;
+  col: number;
+  name?: string; // 위치 이름 (선택사항)
+}
+
+export interface Slot {
+  id: string; // 위치 고유 ID (부모ID-1, 부모ID-2, 부모ID-3) -> (예: 2-3-1, 2-3-2)
+  parentId: string; // 부모 위치 ID
+  row: number;
+  col: number;
+  layer: 'top' | 'middle' | 'bottom';
+  price: number; // 위치 가격
+  maxQuantity: number;
+  currentQuantity: number;
+  status: 'active' | 'inactive' | 'maintenance';
+  product?: SlotProduct;
+  lastModified?: Date;
+  inStockDate?: Date;
+}
+
+export interface SlotProduct {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+  description?: string;
+  inStockDate?: Date;
+  lastModified?: Date;
+}
+
+export interface ParentLocation {
+  id: string; // 부모 위치 ID (예: 2-3)
+  row: number;
+  col: number;
+  name?: string; // 위치 이름 (선택사항)
 }
 
 export interface SuggestedLocation extends Slot {
@@ -55,10 +66,9 @@ export interface ProductRegisterFormProps {
 }
 
 export interface EditLocationProps {
-  location: Slot
-  onSave: (updatedLocation: Slot) => void
-  onCancel: () => void
-  onDelete: (locationId: string) => void
-  availableProducts: Product[]
+  location: Slot;
+  onSave: (updatedLocation: Slot) => void;
+  onCancel: () => void;
+  onDelete: (locationId: string) => void;
+  availableProducts: Product[];
 }
-

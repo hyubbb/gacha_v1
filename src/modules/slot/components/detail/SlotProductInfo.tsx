@@ -1,11 +1,11 @@
-import type { Product } from '@/modules/product/lib/types';
 import { Copyright } from 'lucide-react';
 import React from 'react';
 import { useAtom } from 'jotai';
 import { productDetailModalAtom } from '@/shared/jotai/atom';
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
+import { SlotProduct } from '@/modules/slot/lib';
 
-const ProductDescription = ({ product }: { product: any }) => {
+const ProductDescription = ({ product }: { product: SlotProduct }) => {
   const [productDetailModal, setProductDetailModal] = useAtom(
     productDetailModalAtom
   );
@@ -27,22 +27,22 @@ const ProductDescription = ({ product }: { product: any }) => {
       </div>
       <div className="flex w-2/3 flex-col gap-4 p-2">
         <div className="text-sm font-semibold text-zinc-800">
-          체인소맨-캡슐 피규어 컬렉션
+          {product?.name}
         </div>
         <div className="flex items-center gap-1 text-xs text-gray-500">
-          <Copyright className="h-4 w-4" /> 3
+          <Copyright className="h-4 w-4" /> {product?.price}
         </div>
         <div className="flex items-center gap-2 text-xs text-gray-500">
           잔여수량
           <div className="h-[90%] w-[0.5px] rounded-full bg-gray-400" />
-          <div className="text-xs text-gray-500">10</div>
+          <div className="text-xs text-gray-500">{product?.quantity}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export const SlotProductInfo = ({ product }: { product: any }) => {
+export const SlotProductInfo = ({ product }: { product?: SlotProduct }) => {
   const handleAddProduct = () => {
     console.log('add product');
   };

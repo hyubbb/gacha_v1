@@ -4,17 +4,21 @@ import { SlotProductInfo } from '@/modules/slot/components/detail/SlotProductInf
 import { selectedSlotAtom } from '@/modules/slot/jotai/atom';
 import { coinModifyModalAtom } from '@/shared/jotai/atom';
 import { Button } from '@/shared';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Copyright, Pencil } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ModifyButtons } from '@/modules/slot/components/detail/ModifyButtons';
 
 export const SlotDetail = () => {
-  const selectedSlot = useAtomValue(selectedSlotAtom);
-  const { row, col, product } = selectedSlot || {};
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedSlot, setSelectedSlot] = useAtom(selectedSlotAtom);
+  const { row, col, product, price } = selectedSlot || {};
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   // 커밋된 값(실제 표시/저장용)
-  const [coin, setCoin] = useState(selectedSlot?.price ?? 1);
 
   const setCoinModifyModal = useSetAtom(coinModifyModalAtom);
   const handleCoinModifyModalOpen = () => {
@@ -22,16 +26,20 @@ export const SlotDetail = () => {
       title: '슬롯 코인 변경',
       description: '변경하고자 하는 코인 수를 입력하세요.',
       open: true,
-      coin: coin,
+      coin: price,
       onSubmit: (draftCoin: number) => {
-        setCoin(draftCoin);
+        setSelectedSlot({ ...selectedSlot, price: draftCoin });
       }
     });
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <section className="flex h-full flex-col gap-8 p-2 px-4">
-      <div className="flex h-full flex-col gap-6">
+    <section className="container flex h-full flex-col gap-4 p-2">
+      <div className="flex flex-col gap-6 overflow-y-scroll">
         {/* 슬롯 info */}
         <div className="mb-2 flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -44,7 +52,7 @@ export const SlotDetail = () => {
           </div>
 
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Copyright className="h-4 w-4" /> {coin || 1}개
+            <Copyright className="h-4 w-4" /> {selectedSlot?.price || 0}개
             <div
               className="flex cursor-pointer items-center gap-1"
               onClick={handleCoinModifyModalOpen}

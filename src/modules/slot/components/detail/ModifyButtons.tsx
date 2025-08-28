@@ -12,31 +12,31 @@ export const ModifyButtons = () => {
   const [miniToast, setMiniToast] = useAtom(miniToastAtom);
   const handleProductReplace = () => {
     console.log('상품 교체 클릭');
-    router.push(`/display/list/${selectedSlot?.id}/change`);
+    router.push(`/display/slot/${selectedSlot?.id}/change`);
   };
 
   const handleRemainProduct = () => {
     setRemainModal({
       open: true,
-      onClick: (type: 'random' | 'stock') => {
-        const cnt = 3;
+      onClick: () => {
         setMiniToast({
           open: true,
-          message: `잔여 상품 ${cnt}개 정리했습니다.`,
+          message: `잔여 상품 ${selectedSlot?.product?.quantity}개 정리했습니다.`,
           time: 2000
         });
-      }
+      },
+      product: selectedSlot?.product || undefined
     });
     console.log('남은 상품 클릭');
   };
 
   const handleProductRegister = () => {
     console.log('상품 등록 클릭');
-    router.push(`/display/list/${selectedSlot?.id}/add`);
+    router.push(`/display/slot/${selectedSlot?.id}/add`);
   };
 
   return (
-    <section className="flex gap-2">
+    <section className="mb-4 flex gap-2">
       {selectedSlot?.product ? (
         <>
           <Button
@@ -45,7 +45,7 @@ export const ModifyButtons = () => {
             size="lg"
             onClick={handleRemainProduct}
           >
-            전여 정리
+            잔여 정리
           </Button>
           <Button
             className="h-12 flex-1"

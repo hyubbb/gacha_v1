@@ -13,7 +13,7 @@ import {
   SelectValue
 } from '@/shared/ui/shadcn/select';
 
-import { clampInt } from '../../lib/utils';
+import { clampInt } from '../../lib/utils/utils';
 import {
   Card,
   CardTitle,

@@ -32,7 +32,7 @@ import {
   TabsList,
   TabsTrigger
 } from '@/shared/ui/shadcn/tabs';
-import { addMockProduct } from '@/modules/product/api';
+import { addMockProduct } from '@/modules/product2/api';
 
 export const ProductRegisterAssignForm = ({
   location,
@@ -164,7 +164,8 @@ export const ProductRegisterAssignForm = ({
           name: newProduct.name,
           image: newProduct.image,
           price: newProduct.price,
-          inStockDate: newProduct.inStockDate
+          inStockDate: newProduct.inStockDate || new Date(),
+          quantity: newProduct.quantity
         },
         status: 'active'
       };
@@ -236,7 +237,8 @@ export const ProductRegisterAssignForm = ({
           name: productToAssign.name,
           image: productToAssign.image,
           price: productToAssign.price,
-          inStockDate: new Date()
+          inStockDate: new Date(),
+          quantity: productToAssign.quantity
         },
         status: 'active'
       };

@@ -1,20 +1,37 @@
+'use client';
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import '@/shared/styles/globals.css';
 import { Header } from '@/modules/layout/components';
-
-export const metadata: Metadata = {
-  title: '상품 전시 관리 시스템',
-  description: '가챠머신 상품 전시 관리 대시보드',
-  generator: 'Next.js'
-};
+import { usePathname } from 'next/navigation';
+import { Appbar } from '@/shared/ui/appbar';
 
 export default function RootLayout({
-  children
+  children,
+  params
 }: Readonly<{
   children: React.ReactNode;
+  params: { id: string };
 }>) {
+  const pathname = usePathname();
+
+  if (
+    pathname.endsWith(`/stock/${pathname.split('/')[2]}`) ||
+    pathname.endsWith(`/stock/add`)
+  ) {
+    return <main>{children}</main>;
+  }
+
+  if (pathname.endsWith(`/old`)) {
+    return (
+      <Appbar>
+        <Appbar.Center title="판매 상품 등록" />
+        <Appbar.BackButton text="뒤로" />
+      </Appbar>
+    );
+  }
+
   return (
     <>
       <Header />

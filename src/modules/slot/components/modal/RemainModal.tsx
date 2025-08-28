@@ -11,32 +11,32 @@ import { Button } from '@/shared/ui/shadcn/button';
 import { DialogHeader } from '@/shared/ui/shadcn/dialog';
 import { useAtom } from 'jotai';
 import { remainModalAtom } from '@/modules/slot/jotai/atom';
+import { useSlotProductActions } from '@/modules/slot/hooks';
 
 export const RemainModal = () => {
   const [remainModal, setRemainModal] = useAtom(remainModalAtom);
-  const { open, onClick } = remainModal;
-
-  const handleOpenChange = (open: boolean) => {
-    setRemainModal({ ...remainModal, open });
-  };
-
-  const handleRandomMove = () => {
-    onClick('random');
-    handleOpenChange(false);
-  };
-
-  const handleStockMove = () => {
-    onClick('stock');
-    handleOpenChange(false);
-  };
+  const { open, onClick, product } = remainModal;
+  const { moveProductToRandomSlot, moveProductToStock } = useSlotProductActions(
+    {
+      onClick,
+      handleOpenChange: (open) => {
+        setRemainModal({ ...remainModal, open });
+      },
+      selectedProduct: product || undefined,
+      actionType: 'remain'
+    }
+  );
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={(open) => setRemainModal({ ...remainModal, open })}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>잔여 상품을 정리하시겠습니까?</DialogTitle>
           <DialogDescription>
-            슬롯에 잔여상품 N개가 남아있어요.
+            {product?.name} 상품이 잔여상품 {product?.quantity}개가 남아있어요.
             <br />
             잔여상품을 정리할 방법을 선택해 주세요.
           </DialogDescription>
@@ -44,10 +44,18 @@ export const RemainModal = () => {
         {/* 이전과 동일한 암호일때 오류 발생 */}
         <DialogFooter>
           <div className="flex flex-col space-y-3 p-2">
-            <Button variant="default" size="lg" onClick={handleRandomMove}>
+            <Button
+              variant="default"
+              size="lg"
+              onClick={() => moveProductToRandomSlot('random')}
+            >
               랜덤 슬롯으로 이동
             </Button>
-            <Button variant="outline" size="lg" onClick={handleStockMove}>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => moveProductToStock('stock')}
+            >
               재고로 이동
             </Button>
           </div>

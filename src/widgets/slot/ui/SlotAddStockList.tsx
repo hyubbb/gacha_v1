@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSetAtom } from 'jotai';
 import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
 import { useMemo } from 'react';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { dummyGacha } from '@/shared/hooks/dummyData';
 import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
@@ -24,7 +24,7 @@ export const SlotAddStockList = () => {
     );
   }, [stockProducts, searchTerm]);
 
-  const handleProductClick = (product: SlotProduct) => {
+  const handleProductClick = (product: Product) => {
     setSelectedStockProduct(product);
     router.push(`/display?status=add`);
     // router.push(`/display?status=add`);

@@ -3,9 +3,9 @@ import React from 'react';
 import { useAtom } from 'jotai';
 import { productDetailModalAtom } from '@/shared/jotai/atom';
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 
-const ProductDescription = ({ product }: { product: SlotProduct }) => {
+const ProductDescription = ({ product }: { product: Product }) => {
   const [productDetailModal, setProductDetailModal] = useAtom(
     productDetailModalAtom
   );
@@ -42,7 +42,7 @@ const ProductDescription = ({ product }: { product: SlotProduct }) => {
   );
 };
 
-export const SlotProductInfo = ({ product }: { product?: SlotProduct }) => {
+export const ProductInfo = ({ product }: { product?: Product }) => {
   const handleAddProduct = () => {
     console.log('add product');
   };

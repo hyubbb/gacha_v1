@@ -98,7 +98,7 @@ const SlotPageView = () => {
   };
 
   return (
-    <div className="flex h-full flex-col gap-4 p-4">
+    <div className="container flex h-full flex-col gap-4 p-4">
       {/* 슬롯 영역 */}
       <div
         ref={slotContainerRef}

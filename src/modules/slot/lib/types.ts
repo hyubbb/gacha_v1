@@ -1,4 +1,3 @@
-import { Product } from '@/shared/lib/types';
 import { LAYER_NAMES } from './constants';
 
 export type Layer = (typeof LAYER_NAMES)[number];
@@ -22,12 +21,12 @@ export interface Slot {
   maxQuantity: number;
   currentQuantity: number;
   status: 'active' | 'inactive' | 'maintenance';
-  product?: SlotProduct;
+  product?: Product;
   lastModified?: Date;
   inStockDate?: Date;
 }
 
-export interface SlotProduct {
+export interface Product {
   id: string;
   name: string;
   image: string;
@@ -36,6 +35,9 @@ export interface SlotProduct {
   description?: string;
   inStockDate?: Date;
   lastModified?: Date;
+  brand?: string;
+  tags?: string[];
+  category?: string;
 }
 
 export interface ParentLocation {

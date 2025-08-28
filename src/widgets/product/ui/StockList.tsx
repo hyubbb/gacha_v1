@@ -1,105 +1,100 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
-import { replaceModalAtom, selectedSlotAtom } from '@/modules/slot/jotai/atom';
-import { Button } from '@/shared/ui/shadcn/button';
-import { useAtom } from 'jotai';
-import { miniToastAtom } from '@/shared/jotai/atom';
-import { useRouter } from 'next/navigation';
-import { Subtitle } from '@/shared/ui/components/title/Subtitle';
-import { ProductCoinStockHistory } from '@/shared/ui/components/products/ProductCoinStockHistory';
 import { dummyGacha } from '@/shared/hooks/dummyData';
-import { SlotProduct } from '@/modules/slot/lib';
-import { Package2 } from 'lucide-react';
+import { Button } from '@/shared/ui/appbar/button';
+import { ChevronDown, Copyright, Plus } from 'lucide-react';
+import React, { useMemo } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/shared/ui/shadcn';
+import { useRouter } from 'next/navigation';
+import { useAtom } from 'jotai';
+import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
+import { ProductAddButton } from '@/shared/ui/components/buttons/ProductAddButton';
 
 export const StockList = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedProduct, setSelectedProduct] = useState<SlotProduct | null>(
-    null
-  );
-  const [replaceModal, setReplaceModal] = useAtom(replaceModalAtom);
-  const [miniToast, setMiniToast] = useAtom(miniToastAtom);
-  const [selectedSlot] = useAtom(selectedSlotAtom);
   const router = useRouter();
-
-  const handleSelect = useCallback(
-    (product: SlotProduct) => {
-      setSelectedProduct((prev: SlotProduct | null) =>
-        prev?.id === product.id ? null : product
-      );
-    },
-    [setSelectedProduct]
-  );
-
-  const handleReplace = useCallback(() => {
-    setReplaceModal({
-      open: true,
-      onClick: (type: 'random' | 'stock' | 'delete') => {
-        setMiniToast({
-          open: true,
-          message:
-            type === 'random'
-              ? '랜덤 슬롯으로 이동'
-              : type === 'stock'
-                ? '재고로 이동'
-                : '상품 삭제',
-          time: 2000
-        });
-        router.push(`/display/slot/${selectedSlot?.id}`);
-      },
-      product: selectedProduct || undefined
-    });
-  }, [setReplaceModal, setMiniToast, selectedProduct]);
-
-  useEffect(() => {
-    setIsLoading(false);
+  const stockList = useMemo(() => {
+    return dummyGacha;
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const [selectedStock, setSelectedStock] = useAtom(selectedStockProductAtom);
+  const handleOnclick = (id: string) => {
+    setSelectedStock(stockList.find((item) => item.id === id) || null);
+    router.push(`/stock/${id}`);
+  };
 
   return (
-    <section className="container">
-      <Subtitle>
-        <Package2 size={18} /> 재고 상품 목록
-      </Subtitle>
-      <div className="mb-24 h-full">
-        <ul className="mb-4 flex max-h-full flex-col gap-2 overflow-y-auto">
-          {dummyGacha.map((item, index) => (
-            <ProductCoinStockHistory
-              key={index}
-              index={index}
-              product={item}
-              isSelected={selectedProduct?.id === item.id}
-              onSelect={handleSelect}
-            />
-          ))}
-        </ul>
-      </div>
-      <div className="fixed bottom-8 left-0 z-10 flex w-full justify-center gap-2">
-        <div className="flex w-[90%] gap-4">
-          {/* todo: 기존항목에 합산을 하게 되는것이
-            지금 이화면은 상품을 추가할려했는데 빈칸이 없어서 오게 된것인데 이 상황에서 기존항목에 합산하는 경우가 있을수있나?
-            재고 상품을 
-          */}
-          <Button
-            variant="outline"
-            size="xxl"
-            className="flex-1"
-            disabled={selectedProduct === null}
-            onClick={handleReplace}
-          >
-            기존 항목에 합산
-          </Button>
-          <Button
-            variant="default"
-            size="xxl"
-            className="flex-1"
-            onClick={handleReplace}
-          >
-            새 항목으로 등록
-          </Button>
+    <section className="container mb-20 flex h-screen flex-col overscroll-y-none">
+      <div className="flex flex-col">
+        <div className="text-black-60 mt-2 flex gap-2 py-4">
+          <Select>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="이름순" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">이름순</SelectItem>
+              <SelectItem value="createdAt">등록순</SelectItem>
+              <SelectItem value="price">가격</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select>
+            <SelectTrigger className="w-[100px]">
+              <SelectValue placeholder="가격" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="3">3코인</SelectItem>
+              <SelectItem value="4">4코인</SelectItem>
+              <SelectItem value="5">5코인</SelectItem>
+              <SelectItem value="6">6코인</SelectItem>
+              <SelectItem value="7">7코인</SelectItem>
+              <SelectItem value="8">8코인</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+
+        {stockList.length > 0 ? (
+          <ul className="mb-20 grid grid-cols-2 gap-4">
+            {stockList.map((item) => (
+              <li
+                key={item.id}
+                className="flex cursor-pointer flex-col items-center gap-2"
+                onClick={() => handleOnclick(item.id)}
+              >
+                <div className="flex aspect-square w-full overflow-hidden rounded-md border">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex w-full items-center justify-between px-2">
+                  <div className="flex flex-col items-start">
+                    <p>{item.name}</p>
+                    <div className="text-black-60 flex items-center justify-start gap-1 text-sm">
+                      <Copyright size={14} /> {item.price}
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    {Array.from({ length: item.quantity }).map((_, index) => (
+                      <div
+                        key={index}
+                        className="bg-black-60 h-2 w-2 rounded-full"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex h-[500px] items-center justify-center">
+            <div>재고 상품이 없습니다.</div>
+          </div>
+        )}
+        <ProductAddButton onClick={() => router.push('/stock/add')} />
       </div>
     </section>
   );

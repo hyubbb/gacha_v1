@@ -2,7 +2,7 @@
 import { Card, CardContent } from '@/shared/ui/shadcn/card';
 import React, { useEffect, useState } from 'react';
 import { MapCell } from '../SlotMap';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { ParentLocation, SelectedCell, Slot } from '@/modules/slot/lib/types';
 
 export const GridMap = ({
@@ -17,7 +17,7 @@ export const GridMap = ({
 }: {
   mapSize: { rows: number; cols: number };
   selectedLocationCell: SelectedCell;
-  selectedStockProduct: SlotProduct | null;
+  selectedStockProduct: Product | null;
   status: 'add' | 'view' | 'old' | 'empty' | null;
   getLocationsInCell: (row: number, col: number) => Slot[];
   getParentLocation: (row: number, col: number) => ParentLocation | undefined;

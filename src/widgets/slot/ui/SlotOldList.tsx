@@ -1,11 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { selectedSlotAtom, slotLocationAtom } from '@/modules/slot/jotai/atom';
-import { Button, Card, Slot } from '@/shared';
+import { Button, Card } from '@/shared';
 import { useAtom } from 'jotai';
 import { Copyright, Info } from 'lucide-react';
 import { ProductQuantityDot } from '@/shared/ui/components/products/ProductQuantityDot';
 import { useRouter } from 'next/navigation';
+import type { Slot } from '@/modules/slot/lib';
 
 export const SlotOldList = () => {
   const [isLoading, setIsLoading] = useState(true);

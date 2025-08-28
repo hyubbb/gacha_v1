@@ -33,7 +33,13 @@ import {
   deleteMockLocation
 } from '@/modules/slot/api/mock-data';
 import { getMockProducts } from '@/modules/product2/api/mock-data';
-import { Product, ParentLocation, Slot } from '@/shared/lib';
+import {
+  Product,
+  ParentLocation,
+  Slot,
+  Layer,
+  SelectedCell
+} from '@/modules/slot/lib';
 import { ProductRegisterAssignForm } from '@/modules/slot/components/form/ProductRegisterAssignForm';
 import { ProductModifyForm } from '@/modules/slot/components/form/ProductModifyForm';
 
@@ -59,7 +65,6 @@ import {
   getStoreDisplayName,
   hasAvailableSlots
 } from '@/modules/slot/lib/utils/utils';
-import type { Layer, SelectedCell, SlotProduct } from '@/modules/slot/lib';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAtom } from 'jotai';
 import {
@@ -613,7 +618,7 @@ const LocationDetailsView = ({
   onCreateLocationAndAssignProduct,
   onEditLocation
 }: {
-  selectedStockProduct: SlotProduct | null;
+  selectedStockProduct: Product | null;
   selectedLocationCell: SelectedCell;
   currentParentLocation: ParentLocation | null;
   currentCellLocations: Slot[];
@@ -686,7 +691,7 @@ const LocationDetailsView2 = ({
   onCreateLocationAndAssignProduct,
   onEditLocation
 }: {
-  selectedStockProduct: SlotProduct | null;
+  selectedStockProduct: Product | null;
   selectedLocationCell: SelectedCell;
   currentParentLocation: ParentLocation | null;
   currentCellLocations: Slot[];

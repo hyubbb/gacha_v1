@@ -1,3 +1,3 @@
 export { useSlotMapData } from './useSlotMapData';
 export { useSlotMapState } from './useSlotMapState';
-export { useSlotProductActions } from './useSlotProductActions';
+export { useProductActions } from './useSlotProductActions';

@@ -1,14 +1,14 @@
 'use client';
+import { Product } from '@/modules/slot/lib';
 import { Camera, SearchIcon } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
-import { SlotProduct } from '@/modules/slot/lib';
 
 export const ProductSearch = ({
   products,
   searchTerm,
   setSearchTerm
 }: {
-  products: SlotProduct[];
+  products: Product[];
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
 }) => {

@@ -1,7 +1,6 @@
 'use client';
 import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
-import { SlotProductHistory } from '@/modules/slot/components/detail/SlotProductHistory';
-import { SlotProduct } from '@/modules/slot/lib';
+import { ProductHistory } from '@/modules/slot/components/detail/SlotProductHistory';
 import { dummyGacha } from '@/shared/hooks/dummyData';
 import { coinModifyModalAtom } from '@/shared/jotai/atom';
 import { ProductQuantityDot } from '@/shared/ui/components/products/ProductQuantityDot';
@@ -22,7 +21,7 @@ export const SlotOldListDetail = () => {
       open: true
       // coin: selectedStock?.price || 0,
       // onSubmit: (draftCoin: number) => {
-      //   setSelectedStock({ ...selectedStock, price: draftCoin } as SlotProduct);
+      //   setSelectedStock({ ...selectedStock, price: draftCoin } as Product);
       // }
     });
   }, [selectedStock, setSelectedStock, setCoinModifyModal]);
@@ -71,7 +70,7 @@ export const SlotOldListDetail = () => {
           </div>
         </div>
       </div>
-      <SlotProductHistory product={dummyGacha[0]} />
+      <ProductHistory product={dummyGacha[0]} />
       <div className="fixed bottom-10 left-0 flex w-full justify-center">
         <Button
           variant="default"

@@ -23,8 +23,11 @@ import { Badge } from '@/shared/ui/shadcn/badge';
 import { Upload, X, Package, Check, MapPin, AlertCircle } from 'lucide-react';
 import { useToast } from '@/shared/hooks/use-toast';
 import { DatePicker } from '@/shared/ui/shadcn/date-picker';
-import { Product } from '@/shared/lib/types';
-import { ProductRegisterFormProps, Slot } from '../../lib/types';
+import type {
+  Product,
+  Slot,
+  ProductRegisterFormProps
+} from '@/modules/slot/lib';
 // import { addMockProduct, getMockProducts } from '../model/api/mock-data'
 import {
   Tabs,
@@ -146,8 +149,6 @@ export const ProductRegisterAssignForm = ({
           .map((tag) => tag.trim())
           .filter(Boolean),
         category: newProductFormData.category,
-        status: 'in_stock',
-        createdAt: new Date(),
         inStockDate: newProductInStockDate
       };
 

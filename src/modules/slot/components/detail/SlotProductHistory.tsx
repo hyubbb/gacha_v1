@@ -1,10 +1,10 @@
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
 import { History } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { dummyGacha } from '@/shared/hooks/dummyData';
 
-export const SlotProductHistory = ({ product }: { product?: SlotProduct }) => {
+export const ProductHistory = ({ product }: { product?: Product }) => {
   const dummyData = dummyGacha;
   const [localeDate, setLocaleDate] = useState<string>('');
 

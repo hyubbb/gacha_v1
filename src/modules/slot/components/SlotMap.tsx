@@ -3,7 +3,6 @@ import { Input } from '@/shared/ui/shadcn/input';
 import { Label } from '@/shared/ui/shadcn/label';
 import { Badge } from '@/shared/ui/shadcn/badge';
 import { Plus, Package, AlertCircle } from 'lucide-react';
-import { Slot, ParentLocation } from '@/shared/lib';
 import {
   LAYER_NAMES,
   LAYER_KOREAN,
@@ -17,7 +16,6 @@ import {
   getAvailableSlots
 } from '../lib/utils/utils';
 import { cn } from '@/shared/lib/utils';
-import { SlotProduct } from '../lib';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/shared';
+import { ParentLocation, Product, Slot } from '../lib';
 
 // Legend component
 export const MapLegend = () => (
@@ -123,7 +122,7 @@ export const MapCell = ({
   isSelected: boolean;
   onClick: () => void;
   className?: string;
-  selectedStockProduct?: SlotProduct | null;
+  selectedStockProduct?: Product | null;
   role?: 'admin' | 'branch';
   status?: 'view' | 'add' | 'old' | 'empty' | null;
 }) => (

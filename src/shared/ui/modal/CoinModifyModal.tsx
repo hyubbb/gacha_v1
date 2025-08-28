@@ -13,7 +13,7 @@ import {
 import { useAtom } from 'jotai';
 import { Minus, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { useRouter } from 'next/navigation';
 import { hasAvailableSlots } from '@/modules/slot/lib/utils/utils';
 import { slotLocationAtom } from '@/modules/slot/jotai/atom';
@@ -50,7 +50,7 @@ export const CoinModifyModal = () => {
     setSelectedStockProduct({
       ...selectedStockProduct,
       price: draftCoin
-    } as SlotProduct);
+    } as Product);
     setMiniToast({
       ...miniToast,
       open: true,

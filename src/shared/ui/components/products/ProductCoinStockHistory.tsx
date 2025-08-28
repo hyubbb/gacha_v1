@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Copyright } from 'lucide-react';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { ProductQuantityDot } from './ProductQuantityDot';
 
 export const ProductCoinStockHistory = ({
@@ -10,8 +10,8 @@ export const ProductCoinStockHistory = ({
   isSelected,
   index // 상품체크 테스트용코드
 }: {
-  product: SlotProduct;
-  onSelect: (product: SlotProduct) => void;
+  product: Product;
+  onSelect: (product: Product) => void;
   isSelected: boolean;
   index: number;
 }) => {

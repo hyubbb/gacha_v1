@@ -4,7 +4,7 @@ import { Subtitle } from '@/shared/ui/components/title/Subtitle';
 import { Copyright, History } from 'lucide-react';
 import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
 import { dummyGacha } from '@/shared/hooks/dummyData';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { useRouter } from 'next/navigation';
 import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
 import { useSetAtom } from 'jotai';
@@ -25,7 +25,7 @@ export const ProductAdd = () => {
     );
   }, [stockProducts, searchTerm]);
 
-  const handleProductClick = (product: SlotProduct) => {
+  const handleProductClick = (product: Product) => {
     setSelectedStockProduct(product);
     router.push(`/display?status=add`);
     // router.push(`/display?status=add`);

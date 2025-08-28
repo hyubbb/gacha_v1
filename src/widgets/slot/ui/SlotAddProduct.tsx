@@ -10,16 +10,14 @@ import { useAtom } from 'jotai';
 import { selectedSlotAtom } from '@/modules/slot/jotai/atom';
 import { useRouter } from 'next/navigation';
 import { dummyGacha } from '@/shared/hooks/dummyData';
-import { SlotProduct } from '@/modules/slot/lib';
+import { Product } from '@/modules/slot/lib';
 import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
 
 // 동일한 코인만 보여줘야됨.
 
 export const SlotAddProduct = () => {
   const router = useRouter();
-  const [selectedProduct, setSelectedProduct] = useState<SlotProduct | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSlot, setSelectedSlot] = useAtom(selectedSlotAtom);
   const [miniToast, setMiniToast] = useAtom(miniToastAtom);
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,8 +26,8 @@ export const SlotAddProduct = () => {
     return dummyGacha;
   }, []);
 
-  const handleSelect = useCallback((product: SlotProduct) => {
-    setSelectedProduct((prev: SlotProduct | null) =>
+  const handleSelect = useCallback((product: Product) => {
+    setSelectedProduct((prev: Product | null) =>
       prev?.id === product.id ? null : product
     );
   }, []);

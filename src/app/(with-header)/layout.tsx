@@ -25,10 +25,13 @@ export default function RootLayout({
 
   if (pathname.endsWith(`/old`)) {
     return (
-      <Appbar>
-        <Appbar.Center title="판매 상품 등록" />
-        <Appbar.BackButton text="뒤로" />
-      </Appbar>
+      <>
+        <Appbar>
+          <Appbar.Center title="판매 상품 등록" />
+          <Appbar.BackButton text="뒤로" />
+        </Appbar>
+        <main>{children}</main>
+      </>
     );
   }
 

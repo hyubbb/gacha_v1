@@ -11,14 +11,14 @@ import { Button } from '@/shared/ui/shadcn/button';
 import { DialogHeader } from '@/shared/ui/shadcn/dialog';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { replaceModalAtom, selectedSlotAtom } from '@/modules/slot/jotai/atom';
-import { useSlotProductActions } from '@/modules/slot/hooks';
+import { useProductActions } from '@/modules/slot/hooks';
 
 export const ReplaceModal = () => {
   const [replaceModal, setReplaceModal] = useAtom(replaceModalAtom);
   const { open, onClick, product } = replaceModal;
 
   const { moveProductToRandomSlot, moveProductToStock, removeProductFromSlot } =
-    useSlotProductActions({
+    useProductActions({
       onClick,
       handleOpenChange: (open) => {
         setReplaceModal({ ...replaceModal, open });

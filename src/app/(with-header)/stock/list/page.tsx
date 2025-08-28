@@ -1,7 +1,7 @@
-import { StockList } from '@/widgets/product/ui/StockList';
+import { StockListAdmin } from '@/widgets/product/ui/StockListAdmin';
 
 const page = () => {
-  return <StockList />;
+  return <StockListAdmin />;
 };
 
 export default page;

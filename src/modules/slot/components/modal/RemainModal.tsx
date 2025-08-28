@@ -11,21 +11,19 @@ import { Button } from '@/shared/ui/shadcn/button';
 import { DialogHeader } from '@/shared/ui/shadcn/dialog';
 import { useAtom } from 'jotai';
 import { remainModalAtom } from '@/modules/slot/jotai/atom';
-import { useSlotProductActions } from '@/modules/slot/hooks';
+import { useProductActions } from '@/modules/slot/hooks';
 
 export const RemainModal = () => {
   const [remainModal, setRemainModal] = useAtom(remainModalAtom);
   const { open, onClick, product } = remainModal;
-  const { moveProductToRandomSlot, moveProductToStock } = useSlotProductActions(
-    {
-      onClick,
-      handleOpenChange: (open) => {
-        setRemainModal({ ...remainModal, open });
-      },
-      selectedProduct: product || undefined,
-      actionType: 'remain'
-    }
-  );
+  const { moveProductToRandomSlot, moveProductToStock } = useProductActions({
+    onClick,
+    handleOpenChange: (open) => {
+      setRemainModal({ ...remainModal, open });
+    },
+    selectedProduct: product || undefined,
+    actionType: 'remain'
+  });
 
   return (
     <Dialog

@@ -1,6 +1,4 @@
 'use client';
-import { SlotProductHistory } from '@/modules/slot/components/detail/SlotProductHistory';
-import { SlotProductInfo } from '@/modules/slot/components/detail/SlotProductInfo';
 import { selectedSlotAtom } from '@/modules/slot/jotai/atom';
 import { coinModifyModalAtom } from '@/shared/jotai/atom';
 import { Button } from '@/shared';
@@ -8,6 +6,8 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { Copyright, Pencil } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { ModifyButtons } from '@/modules/slot/components/detail/ModifyButtons';
+import { ProductInfo } from '@/modules/slot/components/detail/SlotProductInfo';
+import { ProductHistory } from '@/modules/slot/components/detail/SlotProductHistory';
 
 export const SlotDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,10 +63,10 @@ export const SlotDetail = () => {
         </div>
 
         {/* 상품 정보 */}
-        <SlotProductInfo product={product} />
+        <ProductInfo product={product} />
 
         {/* 히스토리 */}
-        <SlotProductHistory product={product} />
+        <ProductHistory product={product} />
       </div>
       {/* 상품 정보 수정 */}
       <ModifyButtons />

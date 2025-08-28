@@ -19,7 +19,8 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  /* --destructive: oklch(0.577 0.245 27.325); */
+  --destructive: oklch(0.97 0 0);
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -106,7 +107,7 @@
 
   /* gacha custom */
 
-  --dark-100: rgba(255, 255, 255, 1);
+  --dark-100: 17171B;
   --dark-60: rgba(23, 23, 27, 0.6);
   --dark-40: rgba(23, 23, 27, 0.4);
   --dark-20: rgba(23, 23, 27, 0.2);
@@ -227,7 +228,7 @@ body {
 }
 
 body {
-  background: var(--background);
+  background: var(--secondary);
   color: var(--foreground);
 }
 
@@ -242,7 +243,9 @@ input {
 .container {
   padding: 0 16px;
   margin: 0 auto;
-  overflow: scroll;
+  margin-top: 60px;
+  overflow-y: scroll;
+  overscroll-behavior-y: contain;
 }
 
 #contentCarousel .swiper,

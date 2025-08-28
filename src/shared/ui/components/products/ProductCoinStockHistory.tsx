@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Copyright } from 'lucide-react';
 import { SlotProduct } from '@/modules/slot/lib';
+import { ProductQuantityDot } from './ProductQuantityDot';
 
 export const ProductCoinStockHistory = ({
   product,
@@ -14,7 +15,7 @@ export const ProductCoinStockHistory = ({
   isSelected: boolean;
   index: number;
 }) => {
-  const localeDate = product.inStockDate.toLocaleString();
+  const localeDate = product?.inStockDate?.toLocaleString() || '';
 
   return (
     <li
@@ -41,13 +42,7 @@ export const ProductCoinStockHistory = ({
 
         <div className="flex items-center gap-2 divide-x divide-gray-300 text-xs text-gray-500">
           <div className="pr-2 text-gray-500">재고량</div>
-          <div className="flex items-center gap-1">
-            {product.quantity > 0
-              ? Array.from({ length: product.quantity }, (_, index) => (
-                  <div key={index} className="h-2 w-2 rounded-full bg-black" />
-                ))
-              : '재고 없음'}
-          </div>
+          <ProductQuantityDot quantity={product.quantity} />
         </div>
         <div className="flex items-center gap-2 divide-x divide-gray-300 text-xs text-gray-500">
           <div className="pr-2 text-gray-500">히스토리</div>

@@ -9,7 +9,9 @@ export const getLayerColor = (location: Slot | undefined): string => {
       Date.now() - STALE_INVENTORY_DAYS * 24 * 60 * 60 * 1000
     );
     if (location.product.inStockDate < sevenDaysAgo) {
-      return 'bg-yellow-100 border-yellow-300';
+      return 'bg-black-80 border-black-80';
+    } else {
+      return 'bg-black-50 border-black-50';
     }
   }
 
@@ -24,7 +26,7 @@ export const getLayerColor = (location: Slot | undefined): string => {
           return 'bg-orange-100 border-orange-300';
         return 'bg-green-100 border-green-300';
       }
-      return 'bg-blue-100 border-blue-300';
+      return 'bg-transparent border-dark-20 border-[1px]';
     case 'inactive':
       return 'bg-gray-200 border-gray-400';
     case 'maintenance':
@@ -48,4 +50,48 @@ export const getStoreDisplayName = (storeId: string): string => {
     'store-003': '명동점'
   };
   return storeNames[storeId] || storeId;
+};
+
+/**
+ * 빈 슬롯 존재 여부 확인
+ * 가격을 입력하면 해당 가격의 빈 슬롯 존재 여부 확인
+ * @param allSlots 슬롯 목록
+ * @param targetPrice 가격 (선택사항)
+ * @returns 빈 슬롯 존재 여부
+ */
+export const hasAvailableSlots = (
+  allSlots: Slot[],
+  targetPrice?: number
+): boolean => {
+  return allSlots.some((slot) => {
+    // 활성 상태이고 상품이 없는 슬롯들 중에서
+    if (slot.status === 'active' && !slot.product) {
+      // 가격이 지정된 경우 가격도 일치하는지 확인
+      if (targetPrice !== undefined) {
+        return slot.price === targetPrice;
+      }
+      return true;
+    }
+    return false;
+  });
+};
+
+/**
+ * 빈 슬롯 목록 반환
+ * @param allSlots 슬롯 목록
+ * @param targetPrice 가격 (선택사항)
+ * @returns 빈 슬롯 목록
+ */ export const getAvailableSlots = (
+  allSlots: Slot[],
+  targetPrice?: number
+): Slot[] => {
+  return allSlots.filter((slot) => {
+    if (slot.status === 'active' && !slot.product) {
+      if (targetPrice !== undefined) {
+        return slot.price === targetPrice;
+      }
+      return true;
+    }
+    return false;
+  });
 };

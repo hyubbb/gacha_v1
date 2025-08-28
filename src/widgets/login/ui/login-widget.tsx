@@ -72,8 +72,10 @@ export const LoginWidget = () => {
   return (
     <div className="mx-auto flex h-screen max-w-md flex-col items-center justify-center gap-4 px-4">
       <div className="flex w-full flex-col items-start gap-2">
-        <h1 className="text-2xl font-bold">안녕하세요.</h1>
-        <h3 className="text-lg">
+        <h1 className="text-2xl font-bold">
+          안녕하세요 <br /> 가챠 입니다.
+        </h1>
+        <h3 className="text-dark-60 text-lg">
           서비스를 이용하기 위해 로그인을 진행해 주세요
         </h3>
       </div>

@@ -1,8 +1,23 @@
 'use client';
 
 import { SlotMapView2 } from '@/widgets/slot/ui/SlotMapView2';
+import { useAtom } from 'jotai';
+import { slotListAtom, slotLocationAtom } from '@/modules/slot/jotai/atom';
+import { useEffect } from 'react';
+import {
+  getMockLocations,
+  getMockParentLocations
+} from '@/modules/slot/api/mock-data';
+import { SlotMapView } from '@/widgets/slot';
 
 export default function SlotDemoPage() {
+  const [parentLocations, setParentLocations] = useAtom(slotListAtom);
+  const [locations, setLocations] = useAtom(slotLocationAtom);
+
+  useEffect(() => {
+    setParentLocations(getMockParentLocations());
+    setLocations(getMockLocations());
+  }, []);
   return (
     <div className="container mx-auto p-6">
       <h1 className="mb-6 text-2xl font-bold">슬롯 맵 데모</h1>
@@ -19,7 +34,7 @@ export default function SlotDemoPage() {
         </li>
       </ul>
 
-      <SlotMapView2 userRole="admin" currentStore="store-001" />
+      <SlotMapView userRole="admin" currentStore="store-001" />
     </div>
   );
 }

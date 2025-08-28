@@ -3,6 +3,8 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import '@/shared/styles/globals.css';
 import { UIProvider } from '@/shared/providers/ui';
+import { Suspense } from 'react';
+import { Loading } from '@/shared/ui/components/Loading/Loading';
 
 export const metadata: Metadata = {
   title: '상품 전시 관리 시스템',
@@ -27,7 +29,9 @@ export default function RootLayout({
         `}</style> */}
       </head>
       <body className="flex h-screen flex-col">
-        <UIProvider>{children}</UIProvider>
+        <UIProvider>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </UIProvider>
       </body>
     </html>
   );

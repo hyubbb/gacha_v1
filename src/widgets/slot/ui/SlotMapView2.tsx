@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -54,24 +54,47 @@ import {
   LocationInfo,
   EditLocationForm
 } from '@/modules/slot/components';
-import { clampInt, getStoreDisplayName } from '@/modules/slot/lib/utils/utils';
-import type { Layer, SelectedCell } from '@/modules/slot/lib';
+import {
+  clampInt,
+  getStoreDisplayName,
+  hasAvailableSlots
+} from '@/modules/slot/lib/utils/utils';
+import type { Layer, SelectedCell, SlotProduct } from '@/modules/slot/lib';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAtom } from 'jotai';
+import {
+  coinNotSlotModalAtom,
+  slotListAtom,
+  slotLocationAtom
+} from '@/modules/slot/jotai/atom';
+import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
+import { miniToastAtom } from '@/shared/jotai/atom';
+import { ProductAddButton } from '@/shared/ui/components/buttons/ProductAddButton';
+import { SlotAvailabilityStatus } from '@/modules/slot/components/SlotMap';
+import { GridMap } from '@/modules/slot/components/grid/GridMap';
 
 interface SlotMapViewProps {
   userRole: 'admin' | 'branch';
   currentStore: string;
-  status?: 'view' | 'add';
 }
 
 // Main component
 export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const status = searchParams.get('status') || 'view';
+  const status =
+    (searchParams.get('status') as 'view' | 'add' | 'old' | 'empty') || null;
   const { toast } = useToast();
   const { userRole: hookUserRole, isAdmin, updateRole } = useRole();
-  const { parentLocations, locations, refreshData } = useSlotMapData();
+  const { refreshData } = useSlotMapData();
+
+  const [parentLocations, setParentLocations] = useAtom(slotListAtom);
+  const [locations, setLocations] = useAtom(slotLocationAtom);
+  const [selectedStockProduct, setSelectedStockProduct] = useAtom(
+    selectedStockProductAtom
+  );
+  const [miniToast, setMiniToast] = useAtom(miniToastAtom);
+  const [coinNotSlotModal, setCoinNotSlotModal] = useAtom(coinNotSlotModalAtom);
   const {
     mapSize,
     setMapSize,
@@ -94,11 +117,31 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
     return parentLocations.find((ps) => ps.row === row && ps.col === col);
   };
 
+  // 부모 위치의 ID를 row-col 형식으로 반환
+  const getParentId = (row: number, col: number) => {
+    return `${row}-${col}`;
+  };
+
   const getLocationsInCell = (row: number, col: number) => {
     return locations.filter(
       (location) => location.row === row && location.col === col
     );
   };
+
+  const currentCellLocations = useMemo(
+    () =>
+      selectedLocationCell
+        ? getLocationsInCell(selectedLocationCell.row, selectedLocationCell.col)
+        : [],
+    [selectedLocationCell]
+  );
+  const currentParentLocation = useMemo(
+    () =>
+      selectedLocationCell
+        ? getParentLocation(selectedLocationCell.row, selectedLocationCell.col)
+        : null,
+    [selectedLocationCell]
+  );
 
   // Event handlers
   const handleLocationCellClick = (row: number, col: number) => {
@@ -107,7 +150,7 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
 
   const handleAddParentLocation = (row: number, col: number) => {
     const newParentLocation: ParentLocation = {
-      id: `TEMP-${Date.now()}`,
+      id: getParentId(row, col),
       row,
       col,
       name: ''
@@ -119,8 +162,12 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
     parentLocation: ParentLocation,
     layer: Layer
   ) => {
-    const exists = getMockLocations().some(
-      (l) => l.parentId === parentLocation.id && l.layer === layer
+    // 부모 위치 ID를 row-col 형식으로 변환
+    const parentId = getParentId(parentLocation.row, parentLocation.col);
+
+    // 해당 층에 이미 위치가 존재하는지 확인
+    const exists = locations.some(
+      (l) => l.parentId === parentId && l.layer === layer && l.product
     );
     if (exists) {
       toast({
@@ -131,19 +178,42 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
       return;
     }
 
-    const newLocation: Slot = {
-      id: `TEMP-${Date.now()}`,
-      parentId: parentLocation.id,
-      row: parentLocation.row,
-      col: parentLocation.col,
-      layer,
-      price: 0,
-      maxQuantity: DEFAULT_MAX_QUANTITY,
-      currentQuantity: 0,
-      status: 'active'
-    };
-    setCurrentLocationForAssignment(newLocation);
-    setIsAssignProductModalOpen(true);
+    // todo: 슬롯의 가격은 제품을 넣는다고 해서 수정할 필요없이 그냥 슬롯에 product부분에 제품이 들어가기만하면되는거아님?
+
+    // const newLocation: Slot = {
+    //   id: `${parentId}-${LAYER_NUMBERS[layer]}`,
+    //   parentId: parentId,
+    //   row: parentLocation.row,
+    //   col: parentLocation.col,
+    //   layer,
+    //   price: selectedStockProduct?.price || 10,
+    //   maxQuantity: selectedStockProduct?.quantity || 10,
+    //   currentQuantity: selectedStockProduct?.quantity || 10,
+    //   status: 'active',
+    //   product: selectedStockProduct || undefined
+    // };
+
+    const newLocationProducts = locations.map((l) => {
+      if (l.parentId === parentId && l.layer === layer) {
+        return {
+          ...l,
+          product: selectedStockProduct || undefined
+        };
+      }
+      return l;
+    });
+
+    setMiniToast({
+      open: true,
+      message: '상품이 등록되었습니다.',
+      onClose: () => {
+        setSelectedLocationCell(null);
+        setLocations(newLocationProducts);
+        router.push(`/display`);
+      },
+      position: 'top',
+      time: 2000
+    });
   };
 
   const handleUpdateParentLocation = (
@@ -167,34 +237,85 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
     }
 
     if (isNew) {
-      addMockParentLocation(updatedParentLocation);
+      // 부모 위치 ID를 row-col 형식으로 설정
+      const newParentLocation = {
+        ...updatedParentLocation,
+        id: getParentId(updatedParentLocation.row, updatedParentLocation.col)
+      };
+      // addMockParentLocation(newParentLocation);
+      setParentLocations((prev) => [...prev, newParentLocation]);
+
+      // 새로운 부모 위치 생성 시 상단, 중단, 하단 slotLocation도 함께 생성
+      const parentId = getParentId(
+        updatedParentLocation.row,
+        updatedParentLocation.col
+      );
+      const newLocations: Slot[] = LAYER_NAMES.map((layerName) => ({
+        id: `${parentId}-${LAYER_NUMBERS[layerName]}`,
+        parentId: parentId,
+        row: updatedParentLocation.row,
+        col: updatedParentLocation.col,
+        layer: layerName,
+        price: 0, // 기본값 0, 사용자가 설정할 수 있음
+        maxQuantity: DEFAULT_MAX_QUANTITY,
+        currentQuantity: 0,
+        status: 'active'
+      }));
+
+      // 새로운 위치들을 locations atom에 추가
+      setLocations((prev) => [...prev, ...newLocations]);
+
+      toast({
+        title: '저장 완료',
+        description: '부모 위치와 상단/중단/하단 위치가 생성되었습니다.'
+      });
     } else {
+      // 부모 위치 수정 시 ID를 row-col 형식으로 설정
+      const updatedParentWithNewId = {
+        ...updatedParentLocation,
+        id: getParentId(updatedParentLocation.row, updatedParentLocation.col)
+      };
+
+      // 기존 부모 위치와 연결된 location들의 parentId 업데이트
       if (
         editingParentLocation &&
-        editingParentLocation.id !== updatedParentLocation.id
+        editingParentLocation.id !== updatedParentWithNewId.id
       ) {
         const oldParentId = editingParentLocation.id;
-        const newParentId = updatedParentLocation.id;
-        getMockLocations().forEach((location) => {
-          if (location.parentId === oldParentId) {
-            const layerNumber = LAYER_NUMBERS[location.layer];
-            updateMockLocation({
-              ...location,
-              id: `${newParentId}-${layerNumber}`,
-              parentId: newParentId
-            });
-          }
-        });
+        const newParentId = updatedParentWithNewId.id;
+
+        setLocations((prev) =>
+          prev.map((location) => {
+            if (location.parentId === oldParentId) {
+              const layerNumber = LAYER_NUMBERS[location.layer];
+              return {
+                ...location,
+                id: `${newParentId}-${layerNumber}`,
+                parentId: newParentId
+              };
+            }
+            return location;
+          })
+        );
       }
-      updateMockParentLocation(updatedParentLocation);
+
+      // 부모 위치 업데이트
+      setParentLocations((prev) =>
+        prev.map((parent) =>
+          parent.id === editingParentLocation?.id
+            ? updatedParentWithNewId
+            : parent
+        )
+      );
+
+      toast({
+        title: '저장 완료',
+        description: '부모 위치 정보가 저장되었습니다.'
+      });
     }
 
     refreshData();
     setEditingParentLocation(null);
-    toast({
-      title: '저장 완료',
-      description: '부모 위치 정보가 저장되었습니다.'
-    });
   };
 
   const handleUpdateLocation = (updatedLocation: Slot) => {
@@ -267,22 +388,30 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
     });
   };
 
+  // 상품 할당 취소
   const handleProductAssignmentCancel = () => {
     setIsAssignProductModalOpen(false);
     setCurrentLocationForAssignment(null);
   };
 
-  const currentCellLocations = selectedLocationCell
-    ? getLocationsInCell(selectedLocationCell.row, selectedLocationCell.col)
-    : [];
-  const currentParentLocation = selectedLocationCell
-    ? getParentLocation(selectedLocationCell.row, selectedLocationCell.col)
-    : null;
+  useEffect(() => {
+    const isAvailable = hasAvailableSlots(
+      locations,
+      selectedStockProduct?.price
+    );
+    if (status === 'add' && !isAvailable) {
+      setCoinNotSlotModal({
+        open: true,
+        onClick: () => {},
+        product: undefined
+      });
+    }
+  }, [status, locations, selectedStockProduct]);
 
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>위치 맵 관리</span>
@@ -292,7 +421,6 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* 역할 선택 */}
           <div className="mb-4 flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Label htmlFor="role-select">사용자 역할:</Label>
@@ -316,7 +444,7 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
           <MapControls mapSize={mapSize} setMapSize={setMapSize} />
           <MapLegend />
         </CardContent>
-      </Card>
+      </Card> */}
 
       <section className="flex gap-2">
         <Button variant="outline" onClick={() => router.push('/display')}>
@@ -325,58 +453,28 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
         <Button variant="outline" onClick={() => router.push('/display/slot')}>
           display/slot
         </Button>
+        <Button variant="outline" onClick={() => router.push('/product')}>
+          product
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => router.push('/display/slot-demo')}
+        >
+          display/slot-demo
+        </Button>
       </section>
 
       {/* Location Map */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="overflow-scroll">
-            <div
-              className="grid min-w-max gap-3"
-              style={{
-                gridTemplateColumns: `repeat(${mapSize.cols}, minmax(0, 1fr))`,
-                gridTemplateRows: `repeat(${mapSize.rows}, minmax(0, 1fr))`
-              }}
-            >
-              {Array.from(
-                { length: mapSize.rows * mapSize.cols },
-                (_, index) => {
-                  const row = Math.floor(index / mapSize.cols);
-                  const col = index % mapSize.cols;
-                  const cellLocations = getLocationsInCell(row, col);
-                  const parentLocation = getParentLocation(row, col);
-
-                  // admin이 아닐 때는 부모 위치 정보가 있는 슬롯만 보이도록 처리
-                  // 현재 status가 add상태일땐 상품 재고 빈곳을 찾는거라서 부모 정보가 있는 슬롯만 보이도록 처리
-
-                  const shouldShow =
-                    status === 'add'
-                      ? !!parentLocation
-                      : isAdmin || !!parentLocation;
-
-                  const isInvisible = !shouldShow;
-
-                  return (
-                    <MapCell
-                      key={`${row}-${col}`}
-                      row={row}
-                      col={col}
-                      cellLocations={cellLocations}
-                      parentLocation={parentLocation}
-                      isSelected={
-                        selectedLocationCell?.row === row &&
-                        selectedLocationCell?.col === col
-                      }
-                      onClick={() => handleLocationCellClick(row, col)}
-                      className={isInvisible ? 'invisible' : ''}
-                    />
-                  );
-                }
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <GridMap
+        mapSize={mapSize}
+        selectedLocationCell={selectedLocationCell}
+        selectedStockProduct={selectedStockProduct}
+        status={status}
+        getLocationsInCell={getLocationsInCell}
+        getParentLocation={getParentLocation}
+        isAdmin={isAdmin}
+        handleLocationCellClick={handleLocationCellClick}
+      />
 
       {/* Location Details Dialog */}
       {/* 상품 할당 모달 */}
@@ -412,13 +510,40 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
             ) : editingParentLocation ? (
               <ParentLocationEditForm
                 parentLocation={editingParentLocation}
-                isNew={editingParentLocation.id.startsWith('TEMP-')}
+                isNew={
+                  !parentLocations.some(
+                    (p) => p.id === editingParentLocation.id
+                  )
+                }
                 onSave={handleUpdateParentLocation}
                 onCancel={() => setEditingParentLocation(null)}
                 onDelete={handleDeleteParentLocation}
               />
+            ) : status === 'view' ? (
+              <LocationDetailsView2
+                selectedStockProduct={selectedStockProduct}
+                selectedLocationCell={selectedLocationCell}
+                currentParentLocation={currentParentLocation || null}
+                currentCellLocations={currentCellLocations}
+                onAddParentLocation={() =>
+                  handleAddParentLocation(
+                    selectedLocationCell.row,
+                    selectedLocationCell.col
+                  )
+                }
+                onEditParentLocation={() => {
+                  if (currentParentLocation) {
+                    setEditingParentLocation(currentParentLocation);
+                  }
+                }}
+                onCreateLocationAndAssignProduct={
+                  handleCreateLocationAndAssignProduct
+                }
+                onEditLocation={setEditingLocation}
+              />
             ) : (
               <LocationDetailsView
+                selectedStockProduct={selectedStockProduct}
                 selectedLocationCell={selectedLocationCell}
                 currentParentLocation={currentParentLocation || null}
                 currentCellLocations={currentCellLocations}
@@ -443,8 +568,11 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
         </Dialog>
       )}
 
+      {/* 상품 등록 버튼 */}
+      <ProductAddButton onClick={() => router.push('/product')} />
+
       {/* 상품 할당 모달 */}
-      {currentLocationForAssignment && (
+      {/* {currentLocationForAssignment && (
         <Dialog
           open={isAssignProductModalOpen}
           onOpenChange={setIsAssignProductModalOpen}
@@ -459,22 +587,24 @@ export function SlotMapView2({ userRole, currentStore }: SlotMapViewProps) {
                 할당합니다.
               </DialogDescription>
             </DialogHeader>
+            
             <ProductRegisterAssignForm
               location={currentLocationForAssignment}
               availableProducts={availableProducts}
               onComplete={handleProductAssignmentComplete}
               onCancel={handleProductAssignmentCancel}
-              isNew={currentLocationForAssignment.id.startsWith('TEMP-')}
+              isNew={!currentLocationForAssignment.product}
             />
           </DialogContent>
         </Dialog>
-      )}
+      )} */}
     </div>
   );
 }
 
-// Location details view component
+// Location details 수정중인 컴포넌트
 const LocationDetailsView = ({
+  selectedStockProduct,
   selectedLocationCell,
   currentParentLocation,
   currentCellLocations,
@@ -483,6 +613,7 @@ const LocationDetailsView = ({
   onCreateLocationAndAssignProduct,
   onEditLocation
 }: {
+  selectedStockProduct: SlotProduct | null;
   selectedLocationCell: SelectedCell;
   currentParentLocation: ParentLocation | null;
   currentCellLocations: Slot[];
@@ -494,7 +625,7 @@ const LocationDetailsView = ({
   ) => void;
   onEditLocation: (location: Slot) => void;
 }) => (
-  <div className="space-y-6">
+  <div className="space-y-4">
     {/* 층별 위치 정보 */}
     {currentParentLocation && (
       <>
@@ -505,41 +636,36 @@ const LocationDetailsView = ({
           const layerKorean = LAYER_KOREAN[layerName];
 
           return (
-            <Card key={layerName} className="p-4">
-              <div className="mb-2 flex items-center justify-between">
+            <Card key={layerName} className="gap-0 p-4">
+              <div className="flex items-center justify-between">
                 <h4 className="text-lg font-semibold">
                   {layerKorean}층 ({LAYER_NUMBERS[layerName]})
                 </h4>
                 <div className="flex space-x-2">
-                  {!location ? (
-                    <Button
-                      size="sm"
-                      onClick={() =>
-                        currentParentLocation &&
-                        onCreateLocationAndAssignProduct(
-                          currentParentLocation,
-                          layerName
-                        )
-                      }
-                    >
-                      <Plus className="mr-1 h-4 w-4" /> 상품 할당
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onEditLocation(location)}
-                    >
-                      <Settings className="mr-1 h-4 w-4" /> 위치 수정
-                    </Button>
-                  )}
+                  {!location?.product &&
+                    location?.price === selectedStockProduct?.price && (
+                      <Button
+                        size="sm"
+                        onClick={() =>
+                          currentParentLocation &&
+                          onCreateLocationAndAssignProduct(
+                            currentParentLocation,
+                            layerName
+                          )
+                        }
+                      >
+                        <Plus className="mr-1 h-4 w-4" /> 상품 등록
+                      </Button>
+                    )}
                 </div>
               </div>
-              {location ? (
+              {location?.product ? (
                 <LocationInfo location={location} />
+              ) : location?.price === selectedStockProduct?.price ? (
+                <p className="text-gray-500">상품 등록이 가능한 위치입니다.</p>
               ) : (
                 <p className="text-gray-500">
-                  이 층에는 위치가 설정되지 않았습니다.
+                  코인이 달라서 등록이 불가능한 위치입니다.
                 </p>
               )}
             </Card>
@@ -551,6 +677,7 @@ const LocationDetailsView = ({
 );
 
 const LocationDetailsView2 = ({
+  selectedStockProduct,
   selectedLocationCell,
   currentParentLocation,
   currentCellLocations,
@@ -559,6 +686,7 @@ const LocationDetailsView2 = ({
   onCreateLocationAndAssignProduct,
   onEditLocation
 }: {
+  selectedStockProduct: SlotProduct | null;
   selectedLocationCell: SelectedCell;
   currentParentLocation: ParentLocation | null;
   currentCellLocations: Slot[];
@@ -683,6 +811,11 @@ function ParentLocationEditForm({
 }: ParentLocationEditFormProps) {
   const [editId, setEditId] = useState(parentLocation.id);
   const [editName, setEditName] = useState(parentLocation.name || '');
+  const [layerPrices, setLayerPrices] = useState({
+    top: 0,
+    middle: 0,
+    bottom: 0
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -719,6 +852,34 @@ function ParentLocationEditForm({
           />
         </div>
       </div>
+
+      {/* 층별 금액 설정 */}
+      <div className="space-y-3">
+        <Label className="text-base font-medium">층별 금액 설정</Label>
+        <div className="grid grid-cols-3 gap-4">
+          {LAYER_NAMES.map((layerName) => (
+            <div key={layerName} className="space-y-2">
+              <Label htmlFor={`price-${layerName}`}>
+                {LAYER_KOREAN[layerName]}층 금액
+              </Label>
+              <Input
+                id={`price-${layerName}`}
+                type="number"
+                value={layerPrices[layerName]}
+                onChange={(e) =>
+                  setLayerPrices((prev) => ({
+                    ...prev,
+                    [layerName]: parseInt(e.target.value) || 0
+                  }))
+                }
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onCancel}>
           취소

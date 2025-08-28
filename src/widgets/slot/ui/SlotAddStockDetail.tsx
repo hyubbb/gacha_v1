@@ -1,17 +1,16 @@
 'use client';
-import React, { useMemo, useState } from 'react';
-import { Subtitle } from '@/shared/ui/components/title/Subtitle';
-import { Copyright, History } from 'lucide-react';
-import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
-import { dummyGacha } from '@/shared/hooks/dummyData';
-import { SlotProduct } from '@/modules/slot/lib';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
 import { useSetAtom } from 'jotai';
+import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
+import { useMemo } from 'react';
+import { SlotProduct } from '@/modules/slot/lib';
+import { dummyGacha } from '@/shared/hooks/dummyData';
+import { ProductSearch } from '@/modules/product/components/search/ProductSearch';
+import { Subtitle } from '@/shared/ui/components/title/Subtitle';
+import { Copyright } from 'lucide-react';
 
-// 동일한 코인만 보여줘야됨.
-
-export const ProductAdd = () => {
+export const SlotAddStockDetail = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
   const setSelectedStockProduct = useSetAtom(selectedStockProductAtom);

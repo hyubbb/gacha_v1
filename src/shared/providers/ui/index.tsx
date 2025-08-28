@@ -5,6 +5,7 @@ import { ProductDetailModal } from '@/shared/ui/modal/ProductDetailModal';
 import { Toaster } from '@/shared/ui/shadcn/toaster';
 import { MiniToast } from '@/shared/ui/toast/MiniToast';
 import { ToastContainer } from 'react-toastify';
+import { CoinNotSlotModal } from '@/modules/slot/components/modal/CoinNotSlotModal';
 
 /*
   UIProvider를 통해 dialog와 sheet를 전역에서 렌더링하고 있음.
@@ -24,6 +25,7 @@ export function UIProvider({ children }: { children: React.ReactNode }) {
       <ProductDetailModal />
       <ReplaceModal />
       <RemainModal />
+      <CoinNotSlotModal />
     </>
   );
 }

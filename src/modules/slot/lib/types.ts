@@ -5,6 +5,13 @@ export type Layer = (typeof LAYER_NAMES)[number];
 export type MapSize = { rows: number; cols: number };
 export type SelectedCell = { row: number; col: number } | null;
 
+export interface ParentLocation {
+  id: string; // 부모 위치 ID (예: 2-3)
+  row: number;
+  col: number;
+  name?: string; // 위치 이름 (선택사항)
+}
+
 export interface Slot {
   id: string; // 위치 고유 ID (부모ID-1, 부모ID-2, 부모ID-3) -> (예: 2-3-1, 2-3-2)
   parentId: string; // 부모 위치 ID
@@ -16,6 +23,7 @@ export interface Slot {
   currentQuantity: number;
   status: 'active' | 'inactive' | 'maintenance';
   product?: SlotProduct;
+  lastModified?: Date;
   inStockDate?: Date;
 }
 
@@ -24,9 +32,10 @@ export interface SlotProduct {
   name: string;
   image: string;
   price: number;
-  description?: string;
-  inStockDate: Date;
   quantity: number;
+  description?: string;
+  inStockDate?: Date;
+  lastModified?: Date;
 }
 
 export interface ParentLocation {

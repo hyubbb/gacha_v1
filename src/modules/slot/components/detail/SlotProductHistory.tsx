@@ -1,11 +1,18 @@
 import { Subtitle } from '@/shared/ui/components/title/Subtitle';
 import { History } from 'lucide-react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SlotProduct } from '@/modules/slot/lib';
 import { dummyGacha } from '@/shared/hooks/dummyData';
 
 export const SlotProductHistory = ({ product }: { product?: SlotProduct }) => {
   const dummyData = dummyGacha;
+  const [localeDate, setLocaleDate] = useState<string>('');
+
+  useEffect(() => {
+    if (product?.inStockDate) {
+      setLocaleDate(product.inStockDate.toLocaleString());
+    }
+  }, [product?.inStockDate]);
 
   return (
     <section className="flex flex-col gap-3">
@@ -19,13 +26,11 @@ export const SlotProductHistory = ({ product }: { product?: SlotProduct }) => {
               <img
                 src={item.image}
                 alt={item.name}
-                className="aspect-square h-26 w-auto rounded bg-amber-300 object-contain"
+                className="aspect-square h-26 w-auto rounded bg-white object-contain"
               />
             </div>
             <div className="flex w-2/3 flex-col gap-2 p-px">
-              <div className="text-xs text-gray-500">
-                {item.inStockDate.toLocaleString()}
-              </div>
+              <div className="text-xs text-gray-500">{localeDate}</div>
               <div className="text-sm font-semibold text-zinc-800">
                 상품교체/수량변경
               </div>

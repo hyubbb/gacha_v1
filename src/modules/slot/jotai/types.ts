@@ -13,3 +13,9 @@ export type RemainModalProps = {
   onClick: (type: Action) => void;
   product: SlotProduct | undefined;
 };
+
+export type CoinNotSlotModalProps = {
+  open: boolean;
+  onClick?: (type: Action) => void;
+  product?: SlotProduct;
+};

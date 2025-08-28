@@ -1,4 +1,5 @@
 'use client';
+import { selectedStockProductAtom } from '@/modules/product/jotai/atom';
 import { coinModifyModalAtom, miniToastAtom } from '@/shared/jotai/atom';
 import {
   Button,
@@ -7,22 +8,31 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  Input,
-  toast
+  Input
 } from '@/shared';
 import { useAtom } from 'jotai';
 import { Minus, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { SlotProduct } from '@/modules/slot/lib';
+import { useRouter } from 'next/navigation';
+import { hasAvailableSlots } from '@/modules/slot/lib/utils/utils';
+import { slotLocationAtom } from '@/modules/slot/jotai/atom';
 
 export const CoinModifyModal = () => {
   const [coinModifyModal, setCoinModifyModal] = useAtom(coinModifyModalAtom);
   const [miniToast, setMiniToast] = useAtom(miniToastAtom);
   const { title, description, open, coin, onSubmit } = coinModifyModal;
-  const [draftCoin, setDraftCoin] = useState(coinModifyModal.coin);
-
+  const [selectedStockProduct, setSelectedStockProduct] = useAtom(
+    selectedStockProductAtom
+  );
+  const [locations, setLocations] = useAtom(slotLocationAtom);
+  const [draftCoin, setDraftCoin] = useState(selectedStockProduct?.price || 1);
+  const router = useRouter();
   const handleOpenChange = (open: boolean) => {
     setCoinModifyModal({ ...coinModifyModal, open });
   };
+
+  const [error, setError] = useState(false);
 
   const handleDraftCoinChange = (draftCoin: number) => {
     if (Number.isNaN(draftCoin) || draftCoin < 1) return;
@@ -30,15 +40,31 @@ export const CoinModifyModal = () => {
   };
 
   const handleSubmit = () => {
-    onSubmit(draftCoin);
+    // 코인에 맞는 빈 슬롯이 없습니다.
+    const isAvailable = hasAvailableSlots(locations, draftCoin);
+    if (!isAvailable) {
+      setError(true);
+      return;
+    }
     setCoinModifyModal({ ...coinModifyModal, open: false });
+    setSelectedStockProduct({
+      ...selectedStockProduct,
+      price: draftCoin
+    } as SlotProduct);
     setMiniToast({
       ...miniToast,
       open: true,
       message: '슬롯의 코인이 변경되었습니다.',
       position: 'bottom'
     });
+    router.push('/display?status=add');
   };
+
+  useEffect(() => {
+    if (selectedStockProduct) {
+      setDraftCoin(selectedStockProduct.price);
+    }
+  }, [selectedStockProduct]);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -70,6 +96,9 @@ export const CoinModifyModal = () => {
               onClick={() => handleDraftCoinChange(draftCoin + 1)}
             />
           </div>
+          {error && (
+            <div className="text-red-500">코인에 맞는 빈 슬롯이 없습니다.</div>
+          )}
 
           <Button
             className="w-full"
@@ -85,7 +114,6 @@ export const CoinModifyModal = () => {
             variant="outline"
             size="lg"
             onClick={handleSubmit}
-            disabled={draftCoin === coin} // 값이 동일하면 비활성화
           >
             취소
           </Button>

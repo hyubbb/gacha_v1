@@ -20,17 +20,17 @@ export default function RootLayout({
     pathname.endsWith(`/stock/${pathname.split('/')[2]}`) ||
     pathname.endsWith(`/stock/add`)
   ) {
-    return <main>{children}</main>;
+    return <>{children}</>;
   }
 
-  if (pathname.endsWith(`/old`)) {
+  if (pathname.endsWith(`/old`) || pathname.endsWith(`/slot`)) {
     return (
       <>
         <Appbar>
           <Appbar.Center title="판매 상품 등록" />
           <Appbar.BackButton text="뒤로" />
         </Appbar>
-        <main>{children}</main>
+        {children}
       </>
     );
   }
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main>{children}</main>
+      {children}
     </>
   );
 }
